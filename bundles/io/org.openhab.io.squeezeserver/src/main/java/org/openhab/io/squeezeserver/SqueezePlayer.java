@@ -8,8 +8,12 @@
  */
 package org.openhab.io.squeezeserver;
 
+import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -60,6 +64,9 @@ public class SqueezePlayer {
 	
 	private String irCode;
 	
+	private boolean alarmsEnabled;
+	private List<SqueezeAlarm> alarms;
+	
 	private static final Logger logger = LoggerFactory.getLogger(SqueezePlayer.class);
 	
 	public SqueezePlayer(SqueezeServer server, String playerId, String macAddress) {
@@ -90,7 +97,9 @@ public class SqueezePlayer {
 		this.genre = "";
 		this.year = 0;
 		this.remoteTitle = "";		
-				
+		
+		alarms = new ArrayList<SqueezeAlarm>();
+		
 		printDebug();
 	}
 	
@@ -367,9 +376,65 @@ public class SqueezePlayer {
 	}
 	
 	
+	public boolean getAlarmsEnabled() {
+		return this.alarmsEnabled;
+	}
+	
+	public void setAlarmsEnabled(boolean enabled) {
+		if (this.alarmsEnabled != enabled) {
+			this.alarmsEnabled = enabled;
+			logger.trace(String.format("Alarms enabled = %s", enabled));
+			fireAlarmsEnabledChangeEvent();
+		}
+	}
+	
+	
+	public SqueezeAlarm getAlarm(int index) {
+		if (alarms.size() > index)
+			return alarms.get(index);
+		else
+			return null;
+	}
+	
+	public List<SqueezeAlarm> getAlarms() {
+		return this.alarms;
+	}
+	
+	public void setAlarms(List<SqueezeAlarm> alarms) {
+		boolean alarmsChanged = false;
+		
+		if (this.alarms.size() == alarms.size()) {
+			for (int i = 0 ; i < this.alarms.size() ; i++) {
+				SqueezeAlarm alarm1 = this.alarms.get(i);
+				SqueezeAlarm alarm2 = alarms.get(i);
+				
+				alarmsChanged = !alarm1.getId().equals(alarm2.getId()) ||
+								!alarm1.isEnabled() == alarm2.isEnabled();
+				
+				if (alarmsChanged)
+					break;
+			}
+		} else {
+			alarmsChanged = true;
+		}
+		
+		if (alarmsChanged) {
+			this.alarms = alarms;
+			for (SqueezeAlarm alarm : alarms) {
+				logger.trace(String.format("Alarm: %s enabled %s", alarm.getId(), alarm.isEnabled()));
+			}
+			fireAlarmsChangeEvent();
+		}
+	}
+	
+	
 	@SuppressWarnings("serial")
-	public class PlayerEvent extends EventObject {
+	public class PlayerEvent extends EventObject {		
 		public PlayerEvent(SqueezePlayer source) {
+			super(source);
+		}
+		
+		public PlayerEvent(SqueezePlayer source, String extra) {
 			super(source);
 		}
 		
@@ -531,4 +596,22 @@ public class SqueezePlayer {
 	    	itr.next().irCodeChangeEvent(event);
 	    }
 	}	
+	
+	private synchronized void fireAlarmsEnabledChangeEvent() {
+		PlayerEvent event = new PlayerEvent(this);
+	    Iterator<SqueezePlayerEventListener> itr = squeezeServer.getPlayerEventListeners().iterator();
+
+	    while(itr.hasNext())  {
+	    	itr.next().alarmsEnabledChangeEvent(event);
+	    }
+	}
+	
+	private synchronized void fireAlarmsChangeEvent() {
+		PlayerEvent event = new PlayerEvent(this);
+	    Iterator<SqueezePlayerEventListener> itr = squeezeServer.getPlayerEventListeners().iterator();
+
+	    while(itr.hasNext())  {
+	    	itr.next().alarmsChangeEvent(event);
+	    }
+	}
 }

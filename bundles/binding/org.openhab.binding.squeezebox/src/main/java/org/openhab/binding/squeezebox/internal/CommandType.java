@@ -47,6 +47,9 @@ public enum CommandType {
 	
 	IRCODE("ircode"),
 	
+	ALARMSENABLED("alarmsenabled"),
+	ALARM("alarm"),
+	
 	COMMAND("command");
 	
 	/** Represents the player command as it will be used in *.items configuration */

@@ -21,6 +21,7 @@ import org.openhab.core.library.types.PercentType;
 import org.openhab.core.library.types.StringType;
 import org.openhab.core.library.types.UpDownType;
 import org.openhab.core.types.Command;
+import org.openhab.io.squeezeserver.SqueezeAlarm;
 import org.openhab.io.squeezeserver.SqueezePlayer;
 import org.openhab.io.squeezeserver.SqueezePlayer.PlayerEvent;
 import org.openhab.io.squeezeserver.SqueezePlayerEventListener;
@@ -131,12 +132,29 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 						else if (command.equals(OnOffType.OFF))
 							squeezeServer.unSyncPlayer(bindingConfig.getExtra());
 						break;
+					case ALARMSENABLED:
+						if (command.equals(OnOffType.ON))
+							squeezeServer.setAlarmsEnabled(playerId, 1); 
+						else if (command.equals(OnOffType.OFF))
+							squeezeServer.setAlarmsEnabled(playerId, 0);
+						break;
+					case ALARM:
+						try {
+							int index = Integer.parseInt(bindingConfig.getExtra());
+							if (command.equals(OnOffType.ON))
+								squeezeServer.setAlarmEnabled(playerId, index, 1);
+							else if (command.equals(OnOffType.OFF))
+								squeezeServer.setAlarmEnabled(playerId, index, 0);
+							break;
+						} catch (NumberFormatException e) {
+							logger.warn("Unsupported alarm index '{}'", bindingConfig.getExtra()); 
+						}
 					case COMMAND:
 					    if (command instanceof StringType)
 					    	squeezeServer.playerCommand(playerId, command.toString());
 					    else
-						squeezeServer.playerCommand(playerId, bindingConfig.getExtra());
-					    	break;
+					    	squeezeServer.playerCommand(playerId, bindingConfig.getExtra());
+					    break;
 
 					default:
 						logger.warn("Unsupported command type '{}'", bindingConfig.getCommandType()); 
@@ -232,6 +250,19 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 		stringChangeEvent(event.getPlayerId(), CommandType.IRCODE, event.getPlayer().getIrCode());
 	}
 	
+	@Override
+	public void alarmsEnabledChangeEvent(PlayerEvent event) {
+		booleanChangeEvent(event.getPlayerId(), CommandType.ALARMSENABLED, event.getPlayer().getAlarmsEnabled());
+	}
+	
+	@Override
+	public void alarmsChangeEvent(PlayerEvent event) {
+		List<SqueezeAlarm> alarms = event.getPlayer().getAlarms();
+		for (int i = 0 ; i < alarms.size() ; i++) {
+			booleanChangeEvent(event.getPlayerId(), CommandType.ALARM, String.valueOf(i), alarms.get(i).isEnabled());
+		}
+	}
+	
 	private void stringChangeEvent(String playerId, CommandType commandType, String newState) {
 		logger.debug("SqueezePlayer " + playerId + " -> " + commandType.getCommand() + ": " + newState);
 		for (String itemName : getItemNames(playerId, commandType)) {
@@ -256,6 +287,17 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 			}
 		}
 	}
+	
+	private void booleanChangeEvent(String playerId, CommandType commandType, String extra, boolean newState) {
+		logger.debug("SqueezePlayer " + playerId + " -> " + commandType.getCommand() + ": " + Boolean.toString(newState));
+		for (String itemName : getItemNames(playerId, commandType, extra)) {
+			if (newState) {
+				eventPublisher.postUpdate(itemName, OnOffType.ON);
+			} else {
+				eventPublisher.postUpdate(itemName, OnOffType.OFF);
+			}
+		}
+	}
 
 	private List<String> getItemNames(String playerId, CommandType commandType) {
 		List<String> itemNames = new ArrayList<String>();
@@ -265,6 +307,23 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 				if (!bindingConfig.getPlayerId().equals(playerId))
 					continue;
 				if (!bindingConfig.getCommandType().equals(commandType))
+					continue;
+				itemNames.add(itemName);
+			}
+		}
+		return itemNames;
+	}
+	
+	private List<String> getItemNames(String playerId, CommandType commandType, String extra) {
+		List<String> itemNames = new ArrayList<String>();
+		for (SqueezeboxBindingProvider provider : this.providers) {
+			for (String itemName : provider.getItemNames()) {
+				SqueezeboxBindingConfig bindingConfig = provider.getSqueezeboxBindingConfig(itemName);
+				if (!bindingConfig.getPlayerId().equals(playerId))
+					continue;
+				if (!bindingConfig.getCommandType().equals(commandType))
+					continue;
+				if (!bindingConfig.getExtra().equals(extra))
 					continue;
 				itemNames.add(itemName);
 			}

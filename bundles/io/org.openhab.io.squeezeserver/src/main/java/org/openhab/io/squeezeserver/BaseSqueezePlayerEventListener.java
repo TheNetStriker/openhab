@@ -83,4 +83,12 @@ public class BaseSqueezePlayerEventListener implements SqueezePlayerEventListene
 	@Override
 	public void irCodeChangeEvent(PlayerEvent event) {
 	}
+
+	@Override
+	public void alarmsChangeEvent(PlayerEvent event) {		
+	}
+
+	@Override
+	public void alarmsEnabledChangeEvent(PlayerEvent event) {
+	}
 }

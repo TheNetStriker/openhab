@@ -35,4 +35,7 @@ public interface SqueezePlayerEventListener {
 	 void genreChangeEvent(PlayerEvent event);
 	 void remoteTitleChangeEvent(PlayerEvent event);
 	 void irCodeChangeEvent(PlayerEvent event);
+	 
+	 void alarmsEnabledChangeEvent(PlayerEvent event);
+	 void alarmsChangeEvent(PlayerEvent event);
 }

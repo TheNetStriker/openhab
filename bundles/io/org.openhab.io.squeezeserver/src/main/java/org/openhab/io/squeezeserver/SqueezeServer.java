@@ -104,8 +104,10 @@ public class SqueezeServer implements ManagedService {
 	}
 
 	public synchronized void addPlayerEventListener(SqueezePlayerEventListener playerEventListener) {
-		if (!playerEventListeners.contains(playerEventListener))
+		if (!playerEventListeners.contains(playerEventListener)) {
 			playerEventListeners.add(playerEventListener);
+			queryAdditionalPlayerSettings();
+		}
 	}
 		
 	public synchronized void removePlayerEventListener(SqueezePlayerEventListener playerEventListener) {
@@ -138,6 +140,15 @@ public class SqueezeServer implements ManagedService {
 			return null;
 		}
 		return playersByMacAddress.get(key);
+	}
+	
+	private void queryAdditionalPlayerSettings() {
+		for (SqueezePlayer player : getPlayers()) {
+			// send command to load global alarm setting
+			sendCommand(player.getMacAddress() + " playerpref alarmsEnabled ?");
+			// send command to load alarm settings
+			sendCommand(player.getMacAddress() + " alarms 0 99 filter:all");
+		}
 	}
 
 	public boolean mute(String playerId) {
@@ -311,6 +322,25 @@ public class SqueezeServer implements ManagedService {
 		}
 		return sendCommand(player.getMacAddress() + " mixer volume "
 				+ String.valueOf(volume));
+	}
+	
+	public boolean setAlarmsEnabled(String playerId, int enabled) {
+		SqueezePlayer player = getPlayer(playerId);
+		if (player == null)
+			return false;
+		return sendCommand(String.format("%s playerpref alarmsEnabled %s",
+				player.getMacAddress(), enabled));
+	}
+	
+	public boolean setAlarmEnabled(String playerId, int index, int enabled) {
+		SqueezePlayer player = getPlayer(playerId);
+		if (player == null)
+			return false;
+		SqueezeAlarm alarm = player.getAlarm(index);
+		if (alarm == null)
+			return false;
+		return sendCommand(String.format("%s alarm update id:%s enabled:%s",
+				player.getMacAddress(), alarm.getId(), enabled));
 	}
 
 	public boolean showString(String playerId, String line) {
@@ -583,7 +613,7 @@ public class SqueezeServer implements ManagedService {
 				return null;
 			}
 		}
-
+		
 		private void handlePlayersList(String message) {
 			String[] playersList = decode(message).split("playerindex:\\d+\\s");
 			for (String playerParams : playersList) {
@@ -670,10 +700,37 @@ public class SqueezeServer implements ManagedService {
 					|| messageType.equals("menustatus")
 					|| messageType.equals("button")) {
 				// ignore these for now
+			} else if (messageType.equals("alarms")) {
+				handleAlertMessage(player, messageParts);
+			} else if (messageType.equals("playerpref")) {
+				handlePlayerprefMessage(player, messageParts);
 			} else {
 				logger.debug("Unhandled message type '{}'. Ignoring.",
 						messageType);
 			}
+		}
+		
+		private synchronized void handleAlertMessage(SqueezePlayer player,
+				String[] messageParts) {
+			List<SqueezeAlarm> alarms = new ArrayList<SqueezeAlarm>();
+			String currentId = null;
+						
+			for (String messagePart : messageParts) {		
+				if (messagePart.startsWith("id%3A")) {
+					currentId = messagePart.substring("id%3A".length());
+				} else if (messagePart.startsWith("enabled%3A")) {
+					if (currentId != null) {
+						SqueezeAlarm alarm = new SqueezeAlarm();
+						String enabled = messagePart.substring("enabled%3A".length());						
+						
+						alarm.setId(currentId);
+						alarm.setEnabled(enabled.matches("1"));
+						alarms.add(alarm);
+					}
+				}
+			}
+			
+			player.setAlarms(alarms);
 		}
 
 		private void handleStatusMessage(SqueezePlayer player,
@@ -799,7 +856,24 @@ public class SqueezeServer implements ManagedService {
 					player.setPowered(value.equals("1"));
 				} else if (function.equals("volume")) {
 					player.setVolume(Integer.parseInt(value));
+				} else if (function.equals("alarms")) {
+					sendCommand(player.getMacAddress() + " alarms 0 99 filter:all");
+				} else if (function.equals("alarmsEnabled")) {
+					player.setAlarmsEnabled(value.matches("1"));
 				}
+			}
+		}
+		
+		private void handlePlayerprefMessage(SqueezePlayer player,
+				String[] messageParts) {
+			if (messageParts.length < 4)
+				return;
+
+			String function = messageParts[2];
+			String value = messageParts[3];
+
+			if (function.equals("alarmsEnabled")) {
+				player.setAlarmsEnabled(value.matches("1"));
 			}
 		}
 	}
