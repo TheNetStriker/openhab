@@ -39,7 +39,7 @@ import org.openhab.model.item.binding.BindingConfigParseException;
  * @since 1.3.0
  */
 public class SqueezeboxGenericBindingProvider extends AbstractGenericBindingProvider implements SqueezeboxBindingProvider {
-
+	
 	/**
 	 * {@inheritDoc}
 	 */

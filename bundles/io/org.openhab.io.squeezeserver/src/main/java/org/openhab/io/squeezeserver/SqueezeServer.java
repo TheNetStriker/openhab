@@ -90,6 +90,9 @@ public class SqueezeServer implements ManagedService {
 	private final Map<String, SqueezePlayer> playersById = new ConcurrentHashMap<String, SqueezePlayer>();
 	private final Map<String, SqueezePlayer> playersByMacAddress = new ConcurrentHashMap<String, SqueezePlayer>();
 
+	//Player sync groups, key is the master player and slave players in the list
+	private Map<String, List<String>> syncGroups = new ConcurrentHashMap<String, List<String>>();
+	
 	// language properties
 	private String language;
 	
@@ -106,7 +109,6 @@ public class SqueezeServer implements ManagedService {
 	public synchronized void addPlayerEventListener(SqueezePlayerEventListener playerEventListener) {
 		if (!playerEventListeners.contains(playerEventListener)) {
 			playerEventListeners.add(playerEventListener);
-			queryAdditionalPlayerSettings();
 		}
 	}
 		
@@ -142,15 +144,6 @@ public class SqueezeServer implements ManagedService {
 		return playersByMacAddress.get(key);
 	}
 	
-	private void queryAdditionalPlayerSettings() {
-		for (SqueezePlayer player : getPlayers()) {
-			// send command to load global alarm setting
-			sendCommand(player.getMacAddress() + " playerpref alarmsEnabled ?");
-			// send command to load alarm settings
-			sendCommand(player.getMacAddress() + " alarms 0 99 filter:all");
-		}
-	}
-
 	public boolean mute(String playerId) {
 		SqueezePlayer player = getPlayer(playerId);
 		if (player == null)
@@ -574,6 +567,7 @@ public class SqueezeServer implements ManagedService {
 						clientSocket.getInputStream()));
 
 				sendCommand("players 0");
+				sendCommand("syncgroups ?");
 				sendCommand("listen 1");
 
 				String message;
@@ -585,6 +579,8 @@ public class SqueezeServer implements ManagedService {
 
 					if (message.startsWith("players 0")) {
 						handlePlayersList(message);
+					} else if (message.startsWith("syncgroups")) {
+						handleSyncGroups(message);
 					} else {
 						handlePlayerUpdate(message);
 					}
@@ -655,10 +651,41 @@ public class SqueezeServer implements ManagedService {
 					}
 				}
 
+				queryPlayerSettings(player);
+				
 				// tell the server we want to subscribe to player updates
-				sendCommand(player.getMacAddress()
-						+ " status - 1 subscribe:10 tags:yagJlN");
+				//sendCommand(player.getMacAddress()
+				//		+ " status - 1 subscribe:10 tags:yagJlN");
 			}
+		}
+		
+		private void handleSyncGroups(String message) {
+			String[] syncParameters = decode(message).split("\\s");
+			syncGroups.clear();
+						
+			for (String syncParameter : syncParameters) {
+				if (syncParameter.startsWith("sync_members")) {
+					String value = syncParameter.substring(syncParameter.indexOf(":") + 1);
+					String[] syncGroupPlayers = value.split(",");
+					List<String> slavePlayers = new ArrayList<String>();
+					
+					for (int i = 1 ; i < syncGroupPlayers.length ; i++) {
+						slavePlayers.add(syncGroupPlayers[i]);
+					}
+					
+					syncGroups.put(syncGroupPlayers[0], slavePlayers);
+					logger.debug("Syncgroup added with master player {} and {} slave players.", syncGroupPlayers[0], slavePlayers.size());
+				}
+			}
+		}
+		
+		private void queryPlayerSettings(SqueezePlayer player) {
+			// send command to load global alarm setting
+			sendCommand(player.getMacAddress() + " playerpref alarmsEnabled ?");
+			// send command to load alarm settings
+			sendCommand(player.getMacAddress() + " alarms 0 99 filter:all");
+			// tell the server we want to get all player status values
+			sendCommand(player.getMacAddress() + " status - 1 tags:yagJlN");
 		}
 
 		private void handlePlayerUpdate(String message) {
@@ -690,27 +717,31 @@ public class SqueezeServer implements ManagedService {
 				player.setIrCode(messageParts[2]);
 			} else if (messageType.equals("power")) {
 				// ignore these for now
-				// player.setPowered(messageParts[1].equals("1"));
+				player.setPowered(messageParts[1].equals("1"));
 			} else if (messageType.equals("play")
 					|| messageType.equals("pause")
 					|| messageType.equals("stop")) {
 				// ignore these for now
-				// player.setMode(Mode.valueOf(messageType));
+				player.setMode(Mode.valueOf(messageType));
 			} else if (messageType.equals("mixer")
 					|| messageType.equals("menustatus")
 					|| messageType.equals("button")) {
 				// ignore these for now
 			} else if (messageType.equals("alarms")) {
-				handleAlertMessage(player, messageParts);
+				handleAlarmMessage(player, messageParts);
 			} else if (messageType.equals("playerpref")) {
 				handlePlayerprefMessage(player, messageParts);
+			} else if (messageType.equals("client")) {
+				handleClientMessage(player, messageParts);
+			} else if (messageType.equals("sync")) {
+				handleSyncMessage(player, messageParts);
 			} else {
 				logger.debug("Unhandled message type '{}'. Ignoring.",
 						messageType);
 			}
 		}
-		
-		private synchronized void handleAlertMessage(SqueezePlayer player,
+				
+		private synchronized void handleAlarmMessage(SqueezePlayer player,
 				String[] messageParts) {
 			List<SqueezeAlarm> alarms = new ArrayList<SqueezeAlarm>();
 			String currentId = null;
@@ -833,12 +864,25 @@ public class SqueezeServer implements ManagedService {
 			String action = messageParts[2];
 
 			if (action.equals("newsong")) {
+				String value = messageParts[3];
+				player.setTitle(decode(value));
 				player.setMode(Mode.play);
 			} else if (action.equals("pause")) {
 				player.setMode(messageParts[3].equals("0") ? Mode.play
 						: Mode.pause);
 			} else if (action.equals("stop")) {
 				player.setMode(Mode.stop);
+			}
+			
+			logger.debug("syncGroups '{}' '{}' '{}' '{}'", syncGroups.containsKey(player.getMacAddress()), player.getPlayerId(), action, syncGroups.size());
+			if (syncGroups.containsKey(player.getMacAddress())) {
+				logger.debug("Player '{}' is master of syncgroup, updating playlist action '{}' for slave players.", player.getName(), action);
+				List<String> slavePlayers = syncGroups.get(player.getMacAddress());
+				for (String slavePlayerId : slavePlayers) {
+					SqueezePlayer slavePlayer = playersByMacAddress.get(slavePlayerId);
+					logger.debug("Sending playlist action '{}' to slave player '{}'.", action, slavePlayer.getPlayerId());
+					handlePlaylistMessage(slavePlayer, messageParts);
+				}
 			}
 		}
 
@@ -875,6 +919,27 @@ public class SqueezeServer implements ManagedService {
 			if (function.equals("alarmsEnabled")) {
 				player.setAlarmsEnabled(value.matches("1"));
 			}
+		}
+		
+		private void handleClientMessage(SqueezePlayer player,
+				String[] messageParts) {
+			if (messageParts.length < 3)
+				return;
+
+			String function = messageParts[2];
+
+			if (function.equals("reconnect")) {
+				sendCommand("players 0");
+			}
+		}
+		
+		private void handleSyncMessage(SqueezePlayer player,
+				String[] messageParts) {
+			if (messageParts.length < 3)
+				return;
+
+			//rebuild syncgroups
+			sendCommand("syncgroups ?");
 		}
 	}
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import org.openhab.binding.squeezebox.SqueezeboxBindingConfig;
 import org.openhab.binding.squeezebox.SqueezeboxBindingProvider;
 import org.openhab.core.binding.AbstractBinding;
+import org.openhab.core.binding.BindingProvider;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.IncreaseDecreaseType;
 import org.openhab.core.library.types.OnOffType;
@@ -41,7 +42,26 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 	private static final Logger logger = LoggerFactory.getLogger(SqueezeboxBinding.class);
 
 	private SqueezeServer squeezeServer;
-	
+		
+	@Override
+	public void bindingChanged(final BindingProvider provider, final String itemName) {
+		super.bindingChanged(provider, itemName);
+		
+		if (provider instanceof SqueezeboxBindingProvider) {
+			//Because config and item value is not initialized yet we delay loading for 5 seconds
+			new java.util.Timer().schedule( 
+			        new java.util.TimerTask() {
+			            @Override
+			            public void run() {
+			            	SqueezeboxBindingConfig config = ((SqueezeboxBindingProvider)provider).getSqueezeboxBindingConfig(itemName);
+			            	updateBinding(config, itemName);
+			            }
+			        }, 
+			        5000
+			);
+		}
+	}
+
 	/**
 	 * @{inheritDoc}
 	 */
@@ -163,6 +183,88 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 			catch (Exception e) {
 				logger.warn("Error executing command type '" + bindingConfig.getCommandType() + "'", e);
 			}	
+		}
+	}
+		
+	private void updateBinding(SqueezeboxBindingConfig config, String itemName) {
+		if (squeezeServer == null) {
+			logger.warn("Squeeze Server not initialised or configured yet, ignoring binding config for item '{}'", itemName);
+			return;
+		}
+		
+		logger.debug("Loading value for binding '{}'", itemName);
+		
+		SqueezePlayer player = squeezeServer.getPlayer(config.getPlayerId());
+		
+		switch (config.getCommandType()) {
+			case POWER:
+				booleanChangeEvent(player.getPlayerId(), CommandType.POWER, player.isPowered());
+				break;
+			case MUTE:
+				booleanChangeEvent(player.getPlayerId(), CommandType.MUTE, player.isMuted());
+				break;
+			case VOLUME:
+				numberChangeEvent(player.getPlayerId(), CommandType.VOLUME, player.getVolume());
+				break;
+			case CURRTRACK:
+				numberChangeEvent(player.getPlayerId(), CommandType.CURRTRACK, player.getCurrentPlaylistIndex());
+				break;
+			case PLAYTIME:
+				numberChangeEvent(player.getPlayerId(), CommandType.PLAYTIME, player.getCurrentPlayingTime());
+				break;
+			case NUMTRACKS:
+				numberChangeEvent(player.getPlayerId(), CommandType.NUMTRACKS, player.getNumberPlaylistTracks());
+				break;
+			case SHUFFLE:
+				numberChangeEvent(player.getPlayerId(), CommandType.SHUFFLE, player.getCurrentPlaylistShuffle());
+				break;
+			case REPEAT:
+				numberChangeEvent(player.getPlayerId(), CommandType.REPEAT, player.getCurrentPlaylistRepeat());
+				break;
+			case PLAY:
+				booleanChangeEvent(player.getPlayerId(), CommandType.PLAY, player.isPlaying());
+				break;
+			case PAUSE:
+				booleanChangeEvent(player.getPlayerId(), CommandType.PAUSE, player.isPaused());
+				break;
+			case STOP:
+				booleanChangeEvent(player.getPlayerId(), CommandType.STOP, player.isStopped());
+				break;
+			case TITLE:
+				stringChangeEvent(player.getPlayerId(), CommandType.TITLE, player.getTitle());
+				break;
+			case ALBUM:
+				stringChangeEvent(player.getPlayerId(), CommandType.ALBUM, player.getAlbum());
+				break;
+			case ARTIST:
+				stringChangeEvent(player.getPlayerId(), CommandType.ARTIST, player.getArtist());
+				break;
+			case COVERART:
+				stringChangeEvent(player.getPlayerId(), CommandType.COVERART, player.getCoverArt());
+				break;
+			case YEAR:
+				stringChangeEvent(player.getPlayerId(), CommandType.YEAR, Integer.toString(player.getYear()));
+				break;
+			case GENRE:
+				stringChangeEvent(player.getPlayerId(), CommandType.GENRE, player.getGenre());
+				break;
+			case REMOTETITLE:
+				stringChangeEvent(player.getPlayerId(), CommandType.REMOTETITLE, player.getRemoteTitle());
+				break;
+			case IRCODE:
+				stringChangeEvent(player.getPlayerId(), CommandType.IRCODE, player.getIrCode());
+				break;
+			case ALARMSENABLED:
+				booleanChangeEvent(player.getPlayerId(), CommandType.ALARMSENABLED, player.getAlarmsEnabled());
+				break;
+			case ALARM:
+				List<SqueezeAlarm> alarms = player.getAlarms();
+				for (int i = 0 ; i < alarms.size() ; i++) {
+					booleanChangeEvent(player.getPlayerId(), CommandType.ALARM, String.valueOf(i), alarms.get(i).isEnabled());
+				}
+				break;
+			default:
+				break;
 		}
 	}
 
@@ -339,6 +441,7 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 	 */
 	public void setSqueezeServer(SqueezeServer squeezeServer) {
 		this.squeezeServer = squeezeServer;
+		setInitialValues();
 		this.squeezeServer.addPlayerEventListener(this);
 	}
 
@@ -351,5 +454,21 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 	public void unsetSqueezeServer(SqueezeServer squeezeServer) {
 		this.squeezeServer.removePlayerEventListener(this);
 		this.squeezeServer = null;
+	}
+	
+	private void setInitialValues() {
+		try {
+			for (SqueezeboxBindingProvider provider : providers) {
+				if (provider instanceof SqueezeboxBindingProvider) {
+					for (String itemName : provider.getItemNames()) {
+						SqueezeboxBindingConfig config = ((SqueezeboxBindingProvider)provider).getSqueezeboxBindingConfig(itemName);						
+						updateBinding(config, itemName);
+					}
+				}
+				
+			}
+		} catch (Exception e) {
+			logger.error(e.toString());
+		}
 	}
 }
