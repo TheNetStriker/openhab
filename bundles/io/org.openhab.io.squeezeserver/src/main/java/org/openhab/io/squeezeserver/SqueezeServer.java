@@ -932,6 +932,8 @@ public class SqueezeServer implements ManagedService {
 				sendCommand("players 0");
 			} else if (function.equals("new")) {
 				sendCommand("players 0");
+			} else if (function.equals("disconnect")) {
+				player.setPowered(false);
 			}
 		}
 		
