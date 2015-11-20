@@ -373,6 +373,11 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 	}
 	
 	private void numberChangeEvent(String playerId, CommandType commandType, int newState) {
+		if (newState < 0) {
+			logger.debug("SqueezePlayer " + playerId + " value not initialized -> " + commandType.getCommand() + ": " + Integer.toString(newState));
+			return;
+		}
+		
 		logger.debug("SqueezePlayer " + playerId + " -> " + commandType.getCommand() + ": " + Integer.toString(newState));
 		for (String itemName : getItemNames(playerId, commandType)) {
 			eventPublisher.postUpdate(itemName, new PercentType(newState));

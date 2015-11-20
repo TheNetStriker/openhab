@@ -930,6 +930,8 @@ public class SqueezeServer implements ManagedService {
 
 			if (function.equals("reconnect")) {
 				sendCommand("players 0");
+			} else if (function.equals("new")) {
+				sendCommand("players 0");
 			}
 		}
 		
