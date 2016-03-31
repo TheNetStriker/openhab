@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: openHAB LeserPlus Binding
+Bundle-SymbolicName: org.openhab.binding.leserplus
+Bundle-Version: 1.8.0.qualifier
+Bundle-Vendor: openHAB.org
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Package: gnu.io,
+ org.apache.commons.codec.binary,
+ org.apache.commons.io,
+ org.apache.commons.lang;
+ org.openhab.core.events,
+ org.openhab.core.items,
+ org.openhab.core.library.items,
+ org.openhab.core.library.types,
+ org.openhab.core.transform,
+ org.openhab.core.types,
+ org.openhab.model.item.binding,
+ org.osgi.framework,
+ org.osgi.service.cm,
+ org.osgi.service.event,
+ org.slf4j
+Service-Component: OSGI-INF/leserplusbinding.xml
+Bundle-ClassPath: .
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.openhab.binding.leserplus.internal.LeserPlusActivator
