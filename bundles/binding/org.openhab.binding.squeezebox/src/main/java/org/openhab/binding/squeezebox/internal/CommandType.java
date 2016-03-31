@@ -48,7 +48,16 @@ public enum CommandType {
 	IRCODE("ircode"),
 	
 	ALARMSENABLED("alarmsenabled"),
-	ALARM("alarm"),
+	ALARMENABLED("alarmenabled"),
+	ALARMHOURS("alarmhours"),
+	ALARMMINUTES("alarmminutes"),
+	ALARMMONDAY("alarmmonday"),
+	ALARMTUESDAY("alarmtuesday"),
+	ALARMWEDNESDAY("alarmwednesday"),
+	ALARMTHURSDAY("alarmthursday"),
+	ALARMFRIDAY("alarmfriday"),
+	ALARMSATURDAY("alarmsaturday"),
+	ALARMSUNDAY("alarmsunday"),
 	
 	COMMAND("command");
 	

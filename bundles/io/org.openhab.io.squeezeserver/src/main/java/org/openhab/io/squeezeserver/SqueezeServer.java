@@ -16,8 +16,10 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.URLDecoder;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.List;
@@ -28,6 +30,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.openhab.io.squeezeserver.SqueezePlayer.Mode;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
@@ -744,19 +747,48 @@ public class SqueezeServer implements ManagedService {
 		private synchronized void handleAlarmMessage(SqueezePlayer player,
 				String[] messageParts) {
 			List<SqueezeAlarm> alarms = new ArrayList<SqueezeAlarm>();
-			String currentId = null;
+			SqueezeAlarm alarm = new SqueezeAlarm();
+			alarms.add(alarm);
 						
 			for (String messagePart : messageParts) {		
 				if (messagePart.startsWith("id%3A")) {
-					currentId = messagePart.substring("id%3A".length());
+					String currentId = messagePart.substring("id%3A".length());
+					alarm.setId(currentId);
 				} else if (messagePart.startsWith("enabled%3A")) {
-					if (currentId != null) {
-						SqueezeAlarm alarm = new SqueezeAlarm();
-						String enabled = messagePart.substring("enabled%3A".length());						
-						
-						alarm.setId(currentId);
-						alarm.setEnabled(enabled.matches("1"));
-						alarms.add(alarm);
+					String enabled = messagePart.substring("enabled%3A".length());
+					alarm.setEnabled(enabled.matches("1"));
+				} else if (messagePart.startsWith("time%3A")) {
+					int time = Integer.parseInt(messagePart.substring("time%3A".length()));
+					DateTime dateTime = new DateTime(time*1000L);
+					alarm.setHours(dateTime.getHourOfDay());
+					alarm.setMinutes(dateTime.getMinuteOfHour());
+				} else if (messagePart.startsWith("dow%3A")) {
+					String[] dowParts = messagePart.substring("dow%3A".length()).split(",");
+					
+					for (String dow : dowParts) {
+						switch (dow) {
+							case "0":
+								alarm.setSunday(true);
+								break;
+							case "1":
+								alarm.setMonday(true);
+								break;
+							case "2":
+								alarm.setTuesday(true);
+								break;
+							case "3":
+								alarm.setWednesday(true);
+								break;
+							case "4":
+								alarm.setThursday(true);
+								break;
+							case "5":
+								alarm.setFriday(true);
+								break;
+							case "6":
+								alarm.setSaturday(true);
+								break;
+						}
 					}
 				}
 			}

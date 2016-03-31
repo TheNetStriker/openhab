@@ -257,10 +257,10 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 			case ALARMSENABLED:
 				booleanChangeEvent(player.getPlayerId(), CommandType.ALARMSENABLED, player.getAlarmsEnabled());
 				break;
-			case ALARM:
+			case ALARMENABLED:
 				List<SqueezeAlarm> alarms = player.getAlarms();
 				for (int i = 0 ; i < alarms.size() ; i++) {
-					booleanChangeEvent(player.getPlayerId(), CommandType.ALARM, String.valueOf(i), alarms.get(i).isEnabled());
+					booleanChangeEvent(player.getPlayerId(), CommandType.ALARMENABLED, String.valueOf(i), alarms.get(i).isEnabled());
 				}
 				break;
 			default:
@@ -361,7 +361,7 @@ public class SqueezeboxBinding extends AbstractBinding<SqueezeboxBindingProvider
 	public void alarmsChangeEvent(PlayerEvent event) {
 		List<SqueezeAlarm> alarms = event.getPlayer().getAlarms();
 		for (int i = 0 ; i < alarms.size() ; i++) {
-			booleanChangeEvent(event.getPlayerId(), CommandType.ALARM, String.valueOf(i), alarms.get(i).isEnabled());
+			booleanChangeEvent(event.getPlayerId(), CommandType.ALARMENABLED, String.valueOf(i), alarms.get(i).isEnabled());
 		}
 	}
 	

@@ -408,8 +408,7 @@ public class SqueezePlayer {
 				SqueezeAlarm alarm1 = this.alarms.get(i);
 				SqueezeAlarm alarm2 = alarms.get(i);
 				
-				alarmsChanged = !alarm1.getId().equals(alarm2.getId()) ||
-								!alarm1.isEnabled() == alarm2.isEnabled();
+				alarmsChanged = alarm1.compareTo(alarm2) == -1;
 				
 				if (alarmsChanged)
 					break;
