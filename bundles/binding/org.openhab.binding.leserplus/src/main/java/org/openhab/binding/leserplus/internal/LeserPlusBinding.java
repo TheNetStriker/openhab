@@ -155,14 +155,33 @@ public class LeserPlusBinding extends AbstractEventSubscriber implements Binding
 	 * {@inheritDoc}
 	 */
 	public void processBindingConfiguration(String context, Item item, String bindingConfig) throws BindingConfigParseException {
-
 		String configParts[] = bindingConfig.split(",");
+		Map<String, String> configMap = new HashMap<String, String>();
 
-		String port = configParts[0];
+		for (String strConfig: configParts)
+		{
+			String parameters[] = strConfig.split("=");
+			configMap.put(parameters[0], parameters[1]);
+		}
+		
+		String port = configMap.get("port");
 		
 		LeserPlusDevice leserPlusDevice = leserPlusDevices.get(port);
-		if (leserPlusDevice == null) {
-			leserPlusDevice = new LeserPlusDevice(port);
+		
+		if (leserPlusDevice == null && configMap.containsKey("readertype")) {
+			String readerType = configMap.get("readertype");
+			String readerId = null;
+			
+			if (readerType.equals("leser9")) {
+				if (configMap.containsKey("readerid")) {
+					readerId = configMap.get("readerid");
+				} else {
+					logger.error("Leser 9 need reader id in config");
+					return;
+				}
+			}
+			
+			leserPlusDevice = new LeserPlusDevice(port, readerType, readerId);
 
 			leserPlusDevice.setTransformationService(transformationService);
 			leserPlusDevice.setEventPublisher(eventPublisher);
@@ -183,47 +202,49 @@ public class LeserPlusBinding extends AbstractEventSubscriber implements Binding
 			itemMap.put(item.getName(), port);
 		}
 		
-		if (item instanceof StringItem) {
-			if (leserPlusDevice.getTransponderEventItemName() == null) {
-				leserPlusDevice.setTransponderEventItemName(item.getName());
-			} else {
-				throw new BindingConfigParseException(
-						"There is already another StringItem assigned to serial port "
-								+ port);
+		if (leserPlusDevice != null) {
+			if (item instanceof StringItem) {
+				if (leserPlusDevice.getTransponderEventItemName() == null) {
+					leserPlusDevice.setTransponderEventItemName(item.getName());
+				} else {
+					throw new BindingConfigParseException(
+							"There is already another StringItem assigned to serial port "
+									+ port);
+				}
+			} else if (item instanceof SwitchItem && configMap.containsKey("command")) {
+				if (configParts.length == 1)
+					throw new BindingConfigParseException("SwitchItems require additional argument.");
+				
+				String command = configMap.get("command");
+
+				if (command.equals("OpenDoor")) {
+					if (leserPlusDevice.getOpenDoorItemName() == null) {
+						leserPlusDevice.setOpenDoorItemName(item.getName());
+						itemCommandMap.put(item.getName(), LeserPlusCommand.OPENDOOR);
+					} else {
+						throw new BindingConfigParseException(
+								"There is already another OpenDoor SwitchItem assigned to serial port "
+										+ port);
+					}
+				} else if (command.equals("DisableTransponder")) {
+					if (leserPlusDevice.getDisableTranspondersItemName() == null) {
+						leserPlusDevice.setDisableTranspondersItemName(item.getName());
+						itemCommandMap.put(item.getName(), LeserPlusCommand.DISABLETRANSPONDER);
+					} else {
+						throw new BindingConfigParseException(
+								"There is already another DisableTransponder SwitchItem assigned to serial port "
+										+ port);
+					}
+				}
 			}
-		} else if (item instanceof SwitchItem) {
-			if (configParts.length == 1)
-				throw new BindingConfigParseException("SwitchItems require additional argument.");
 			
-			String type = configParts[1];
-						
-			if (type.equals("OpenDoor")) {
-				if (leserPlusDevice.getOpenDoorItemName() == null) {
-					leserPlusDevice.setOpenDoorItemName(item.getName());
-					itemCommandMap.put(item.getName(), LeserPlusCommand.OPENDOOR);
-				} else {
-					throw new BindingConfigParseException(
-							"There is already another OpenDoor SwitchItem assigned to serial port "
-									+ port);
-				}
-			} else if (type.equals("DisableTransponder")) {
-				if (leserPlusDevice.getDisableTranspondersItemName() == null) {
-					leserPlusDevice.setDisableTranspondersItemName(item.getName());
-					itemCommandMap.put(item.getName(), LeserPlusCommand.DISABLETRANSPONDER);
-				} else {
-					throw new BindingConfigParseException(
-							"There is already another DisableTransponder SwitchItem assigned to serial port "
-									+ port);
-				}
+			Set<String> itemNames = contextMap.get(context);
+			if (itemNames == null) {
+				itemNames = new HashSet<String>();
+				contextMap.put(context, itemNames);
 			}
+			itemNames.add(item.getName());
 		}
-		
-		Set<String> itemNames = contextMap.get(context);
-		if (itemNames == null) {
-			itemNames = new HashSet<String>();
-			contextMap.put(context, itemNames);
-		}
-		itemNames.add(item.getName());
 	}
 
 	/**

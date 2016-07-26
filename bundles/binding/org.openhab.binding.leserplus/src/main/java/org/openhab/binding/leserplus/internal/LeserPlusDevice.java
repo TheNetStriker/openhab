@@ -43,6 +43,7 @@ public class LeserPlusDevice implements SerialPortEventListener {
 	private static final Logger logger = LoggerFactory.getLogger(LeserPlusDevice.class);
 
 	private String port;
+	private String readerType;
 	private String transponderEventItemName;
 	private String openDoorItemName;
 	private String disableTranspondersItemName;
@@ -59,11 +60,28 @@ public class LeserPlusDevice implements SerialPortEventListener {
 
 	private OutputStream outputStream;
 	
-	private Pattern pattern;
+	private Pattern leser7plusPattern;
+	private Pattern leser9Pattern;
 	
-	public LeserPlusDevice(String port) {
+	private String leser7plusOpenRelaisCommand = "\u0002FFCR152\u0004";
+	private String leser7plusCloseRelaisCommand = "\u0002FFCR051\u0004";
+	private String leser9OpenRelaisCommand = "\u0002R1\u0004";
+	private String leser9CloseRelaisCommand = "\u0002R0\u0004";
+	private String leser9ReaderId;
+	private long lastCommandParsed;
+	
+	public LeserPlusDevice(String port, String readerType, String readerId) {
 		this.port = port;
-		pattern = Pattern.compile("[\u0002]([A-Z0-9]{2})EM([A-Z0-9]{10}).*[\u0004]");
+		this.readerType = readerType;
+		this.leser9ReaderId = readerId;
+		
+		leser7plusPattern = Pattern.compile("[\u0002]([A-Z0-9]{2})EM([A-Z0-9]{10}).*[\u0004]");
+		leser9Pattern = Pattern.compile("[\u0002]R([A-Z0-9]{10})[\u0004].*");
+		
+		if (!readerType.equals("leser7plus") && !readerType.equals("leser9")) {
+			logger.error("Invalid reader type: " + readerType);
+			return;
+		}
 	}
 
 	public void setEventPublisher(EventPublisher eventPublisher) {
@@ -148,8 +166,17 @@ public class LeserPlusDevice implements SerialPortEventListener {
 			serialPort.notifyOnDataAvailable(true);
 
 			try {
+				int baud;
+				if (readerType.equals("leser7plus")) {
+					baud = 57600;
+				} else if (readerType.equals("leser9")) {
+					baud = 9600;
+				} else {
+					logger.error("Invalid reader type: " + readerType);
+					return;
+				}
 				// set port parameters
-				serialPort.setSerialPortParams(57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+				serialPort.setSerialPortParams(baud, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
 						SerialPort.PARITY_NONE);
 			} catch (UnsupportedCommOperationException e) {
 				throw new InitializationException(e);
@@ -208,13 +235,42 @@ public class LeserPlusDevice implements SerialPortEventListener {
                 
                 String result = sb.toString();
                 logger.debug("Received message '{}' on serial port {}", new Object[] { result, port });
-                
+                                
     			if (transponderEventItemName != null) {
-    				Matcher matcher = pattern.matcher(result);
-
+    				Matcher matcher;
+    					
+    				if (readerType.equals("leser7plus")) {
+    					matcher = leser7plusPattern.matcher(result);
+    				} else if (readerType.equals("leser9")) {
+    					matcher = leser9Pattern.matcher(result);
+    				} else {
+    					logger.error("Invalid reader type: " + readerType);
+    					return;
+    				}
+    				
                     if (matcher.matches()) {
-                    	String readerId = matcher.group(1);
-                    	String transponderId = matcher.group(2);
+                    	//Only parse one transponder each 15 seconds
+                        long currentTime = System.currentTimeMillis();
+                        if (currentTime - lastCommandParsed <= 15000) {
+                        	logger.debug("Wait 15 seconds until next transponder is checked.");
+                        	return;
+                        }
+
+                    	lastCommandParsed = currentTime;
+                    	
+                    	String readerId;
+                    	String transponderId;
+                    	
+                    	if (readerType.equals("leser7plus")) {
+                    		readerId = matcher.group(1);
+                        	transponderId = matcher.group(2);
+        				} else if (readerType.equals("leser9")) {
+        					readerId = leser9ReaderId;
+                        	transponderId = matcher.group(1);
+        				} else {
+        					logger.error("Invalid reader type: " + readerType);
+        					return;
+        				}
                     	
                     	if(transformationService == null) {
     						logger.error("No transformation service available!");
@@ -274,24 +330,40 @@ public class LeserPlusDevice implements SerialPortEventListener {
 		Thread openDoorThread = new Thread() {
 		    public void run() {
 		        try {
-		        	outputStream.write("\u0002FFCR152\u0004".getBytes());
+		        	String relaisOpenCommand;
+		        	String relaisCloseCommand;
+		        	
+		        	if (readerType.equals("leser7plus")) {
+		        		relaisOpenCommand = leser7plusOpenRelaisCommand;
+		        		relaisCloseCommand = leser7plusCloseRelaisCommand;
+    				} else if (readerType.equals("leser9")) {
+    					relaisOpenCommand = leser9OpenRelaisCommand;
+		        		relaisCloseCommand = leser9CloseRelaisCommand;
+    				} else {
+    					logger.error("Invalid reader type: " + readerType);
+    					return;
+    				}
+		        	
+		        	outputStream.write(relaisOpenCommand.getBytes());
 		            outputStream.flush();
 		            logger.debug("Relais open command sent.");
 		            
 		            try { Thread.sleep(1000);
 		    		} catch (InterruptedException e) {}
 		            
-		            outputStream.write("\u0002FFCR051\u0004".getBytes());
+		            outputStream.write(relaisCloseCommand.getBytes());
 		            outputStream.flush();
 		            logger.debug("Relais close command sent.");
 		            
-		            //Send close command a second time to be sure the relays is closed
-		            try { Thread.sleep(1000);
-		    		} catch (InterruptedException e) {}
-		            
-		            outputStream.write("\u0002FFCR051\u0004".getBytes());
-		            outputStream.flush();
-		            logger.debug("Relais close command sent.");
+		            if (readerType.equals("leser7plus")) {
+			            //Send close command a second time to be sure the relays is closed
+			            try { Thread.sleep(1000);
+			    		} catch (InterruptedException e) {}
+			            
+			            outputStream.write(relaisCloseCommand.getBytes());
+			            outputStream.flush();
+			            logger.debug("Relais close command sent.");
+		            }
 		        } catch(Exception e) {
 		        	logger.error("Error sending OpenDoor command on serial port {}: {}", new Object[] { getPort(), e.getMessage() });
 		        }
