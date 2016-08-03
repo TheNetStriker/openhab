@@ -142,6 +142,7 @@ public class LeserPlusDevice implements SerialPortEventListener {
 				}
 			}
 		}
+		
 		if (portId != null) {
 			// initialize serial port
 			try {
@@ -188,6 +189,8 @@ public class LeserPlusDevice implements SerialPortEventListener {
 			} catch (IOException e) {
 				throw new InitializationException(e);
 			}
+			
+			logger.debug("Serial port '{}' has been initialized.", port);
 		} else {
 			StringBuilder sb = new StringBuilder();
 			portList = CommPortIdentifier.getPortIdentifiers();
@@ -215,105 +218,100 @@ public class LeserPlusDevice implements SerialPortEventListener {
 			break;
 		case SerialPortEvent.DATA_AVAILABLE:
 			try {
-                StringBuilder sb = new StringBuilder();
-                byte[] readBuffer = new byte[20];
-                
-                do {
+				logger.debug("DATA_AVAILABLE event: {} bytes on serial port {}", new Object[] { inputStream.available(), port });
+				
+				do {
+					StringBuilder sb = new StringBuilder();
+					byte b = 0;
+	                
                     // read data from serial device
-                    while (inputStream.available() > 0) {
-                        int bytes = inputStream.read(readBuffer);
-                        sb.append(new String(readBuffer, 0, bytes));
+                    while (inputStream.available() > 0 && b != 4 ) {
+                    	b = (byte)inputStream.read();
+                    	sb.append((char)b);
                     }
-                    try {
-                        // add wait states around reading the stream, so that interrupted transmissions are merged
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        // ignore interruption
-                    }
-                } while (inputStream.available() > 0);
-                // sent data
-                
-                String result = sb.toString();
-                logger.debug("Received message '{}' on serial port {}", new Object[] { result, port });
-                                
-    			if (transponderEventItemName != null) {
-    				Matcher matcher;
-    					
-    				if (readerType.equals("leser7plus")) {
-    					matcher = leser7plusPattern.matcher(result);
-    				} else if (readerType.equals("leser9")) {
-    					matcher = leser9Pattern.matcher(result);
-    				} else {
-    					logger.error("Invalid reader type: " + readerType);
-    					return;
-    				}
-    				
-                    if (matcher.matches()) {
-                    	//Only parse one transponder each 15 seconds
-                        long currentTime = System.currentTimeMillis();
-                        if (currentTime - lastCommandParsed <= 15000) {
-                        	logger.debug("Wait 15 seconds until next transponder is checked.");
-                        	return;
-                        }
+	                
+	                String result = sb.toString();
+	                logger.debug("Received message '{}' on serial port {}", new Object[] { result, port });
+	                                
+	    			if (transponderEventItemName != null) {
+	    				Matcher matcher;
+	    					
+	    				if (readerType.equals("leser7plus")) {
+	    					matcher = leser7plusPattern.matcher(result);
+	    				} else if (readerType.equals("leser9")) {
+	    					matcher = leser9Pattern.matcher(result);
+	    				} else {
+	    					logger.error("Invalid reader type: " + readerType);
+	    					return;
+	    				}
+	    				
+	                    if (matcher.matches()) {
+	                    	//Only parse one transponder each 15 seconds
+	                        long currentTime = System.currentTimeMillis();
+	                        if (currentTime - lastCommandParsed <= 15000) {
+	                        	logger.debug("Wait 15 seconds until next transponder is checked.");
+	                        	return;
+	                        }
 
-                    	lastCommandParsed = currentTime;
-                    	
-                    	String readerId;
-                    	String transponderId;
-                    	
-                    	if (readerType.equals("leser7plus")) {
-                    		readerId = matcher.group(1);
-                        	transponderId = matcher.group(2);
-        				} else if (readerType.equals("leser9")) {
-        					readerId = leser9ReaderId;
-                        	transponderId = matcher.group(1);
-        				} else {
-        					logger.error("Invalid reader type: " + readerType);
-        					return;
-        				}
-                    	
-                    	if(transformationService == null) {
-    						logger.error("No transformation service available!");
-                    	} else {
-                    		String userInfo = transformationService.transform("transponders.map", transponderId);
-                    		
-                    		//Check if user was found in the map file
-                    		if (!userInfo.equals("") && !userInfo.equals(transponderId)) {
-                    			String userInfos[] = userInfo.split("\\|");
-                    			
-                    			//Check if user has at least set one reader
-                    			if (userInfos.length < 2) {
-                        			logger.debug("Transponder {} has no authrorized readers configured (reader {}, userInfo {}, userInfos.length {}).",
-                        					new Object[] { transponderId, readerId, userInfo, userInfos.length });
-                        			eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("NOK|%s|%s", transponderId, readerId)));
-                        		} else {
-                        			String userName = userInfos[0];
-                            		String authorizedReaders[] = userInfos[1].split(",");
-                            		
-                            		//Check if user is authorized on this reader
-                            		if (ArrayUtils.contains(authorizedReaders, readerId)) {
-                            			//Check if DisableTransponders switch is on
-                            			if (!disableTransponders) {
-                            				OpenDoor();
-                            				logger.debug("Transponder {} is authrorized for reader {}.", new Object[] { transponderId, readerId });
-                                            eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("OK|%s|%s|%s", transponderId, userName, readerId)));
-                            			} else {
-                            				logger.debug("Transponder {} is authrorized for reader {} but transponder access is disabled.",
-                            						new Object[] { transponderId, readerId });
-                            				eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("DISABLED|%s|%s|%s", transponderId, userName, readerId)));
-                            			}
-                            		} else {
-                            			logger.debug("Transponder {} is not authrorized for reader {}.", new Object[] { transponderId, readerId });
-                            			eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("NOK|%s|%s", transponderId, readerId)));
-                            		}
-                        		}
-                    		} else {
-                    			logger.debug("Transponder {} is not registred (reader {}).", new Object[] { transponderId, readerId });
-                    			eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("NOK|%s|%s", transponderId, readerId)));
-                    		}
-                    	}
-                    }
-    			}
+	                    	lastCommandParsed = currentTime;
+	                    	
+	                    	String readerId;
+	                    	String transponderId;
+	                    	
+	                    	if (readerType.equals("leser7plus")) {
+	                    		readerId = matcher.group(1);
+	                        	transponderId = matcher.group(2);
+	        				} else if (readerType.equals("leser9")) {
+	        					readerId = leser9ReaderId;
+	                        	transponderId = matcher.group(1);
+	        				} else {
+	        					logger.error("Invalid reader type: " + readerType);
+	        					return;
+	        				}
+	                    	
+	                    	if(transformationService == null) {
+	    						logger.error("No transformation service available!");
+	                    	} else {
+	                    		String userInfo = transformationService.transform("transponders.map", transponderId);
+	                    		
+	                    		//Check if user was found in the map file
+	                    		if (!userInfo.equals("") && !userInfo.equals(transponderId)) {
+	                    			String userInfos[] = userInfo.split("\\|");
+	                    			
+	                    			//Check if user has at least set one reader
+	                    			if (userInfos.length < 2) {
+	                        			logger.debug("Transponder {} has no authrorized readers configured (reader {}, userInfo {}, userInfos.length {}).",
+	                        					new Object[] { transponderId, readerId, userInfo, userInfos.length });
+	                        			eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("NOK|%s|%s", transponderId, readerId)));
+	                        		} else {
+	                        			String userName = userInfos[0];
+	                            		String authorizedReaders[] = userInfos[1].split(",");
+	                            		
+	                            		//Check if user is authorized on this reader
+	                            		if (ArrayUtils.contains(authorizedReaders, readerId)) {
+	                            			//Check if DisableTransponders switch is on
+	                            			if (!disableTransponders) {
+	                            				OpenDoor();
+	                            				logger.debug("Transponder {} is authrorized for reader {}.", new Object[] { transponderId, readerId });
+	                                            eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("OK|%s|%s|%s", transponderId, userName, readerId)));
+	                            			} else {
+	                            				logger.debug("Transponder {} is authrorized for reader {} but transponder access is disabled.",
+	                            						new Object[] { transponderId, readerId });
+	                            				eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("DISABLED|%s|%s|%s", transponderId, userName, readerId)));
+	                            			}
+	                            		} else {
+	                            			logger.debug("Transponder {} is not authrorized for reader {}.", new Object[] { transponderId, readerId });
+	                            			eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("NOK|%s|%s", transponderId, readerId)));
+	                            		}
+	                        		}
+	                    		} else {
+	                    			logger.debug("Transponder {} is not registred (reader {}).", new Object[] { transponderId, readerId });
+	                    			eventPublisher.sendCommand(transponderEventItemName, new StringType(String.format("NOK|%s|%s", transponderId, readerId)));
+	                    		}
+	                    	}
+	                    }
+	    			}
+                } while (inputStream.available() > 0);
 			} catch (IOException e) {
 				logger.error("Error receiving data on serial port {}: {}", new Object[] { port, e.getMessage() });
 			} catch (TransformationException e) {
