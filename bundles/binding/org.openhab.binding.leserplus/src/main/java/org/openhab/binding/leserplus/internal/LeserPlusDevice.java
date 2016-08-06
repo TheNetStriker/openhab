@@ -228,6 +228,11 @@ public class LeserPlusDevice implements SerialPortEventListener {
                     while (inputStream.available() > 0 && b != 4 ) {
                     	b = (byte)inputStream.read();
                     	sb.append((char)b);
+
+                    	//If InputStream is empty and there is no EOT byte wait some time for more data.
+                    	if (inputStream.available() == 0 && b != 4) {
+                    		try { Thread.sleep(25); } catch (InterruptedException e) {}
+                    	}
                     }
 	                
 	                String result = sb.toString();
