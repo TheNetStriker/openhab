@@ -1,0 +1,367 @@
+Group gEnergieWaermepumpe_Version "Version" (gEnergieWaermepumpe) 
+Number Version "Version [%.1f null]" (gEnergieWaermepumpe_Version,gEnergieWaermepumpe) { stiebelheatpump="Version" }
+Text item=Version
+
+Group gEnergieWaermepumpe_Time "Time" (gEnergieWaermepumpe) 
+Number WeekDay "WeekDay [%d d]" (gEnergieWaermepumpe_Time,gEnergieWaermepumpe) { stiebelheatpump="WeekDay" }
+Number Hours "Hours [%d h]" (gEnergieWaermepumpe_Time,gEnergieWaermepumpe) { stiebelheatpump="Hours" }
+Number Minutes "Minutes [%d min]" (gEnergieWaermepumpe_Time,gEnergieWaermepumpe) { stiebelheatpump="Minutes" }
+Number Seconds "Seconds [%d s]" (gEnergieWaermepumpe_Time,gEnergieWaermepumpe) { stiebelheatpump="Seconds" }
+Number Year "Year [%d YY]" (gEnergieWaermepumpe_Time,gEnergieWaermepumpe) { stiebelheatpump="Year" }
+Number Month "Month [%d MM]" (gEnergieWaermepumpe_Time,gEnergieWaermepumpe) { stiebelheatpump="Month" }
+Number Day "Day [%d DD]" (gEnergieWaermepumpe_Time,gEnergieWaermepumpe) { stiebelheatpump="Day" }
+Setpoint item=WeekDay minValue=1 maxValue=6 step=1.0
+Setpoint item=Hours minValue=0 maxValue=23 step=1.0
+Setpoint item=Minutes minValue=0 maxValue=59 step=1.0
+Setpoint item=Seconds minValue=0 maxValue=59 step=1.0
+Setpoint item=Year minValue=0 maxValue=99 step=1.0
+Setpoint item=Month minValue=1 maxValue=12 step=1.0
+Setpoint item=Day minValue=1 maxValue=31 step=1.0
+
+Group gEnergieWaermepumpe_OperationCounters "OperationCounters" (gEnergieWaermepumpe) 
+Number CompressorA "CompressorA [%d h]" (gEnergieWaermepumpe_OperationCounters,gEnergieWaermepumpe) { stiebelheatpump="CompressorA" }
+Number CompressorB "CompressorB [%d h]" (gEnergieWaermepumpe_OperationCounters,gEnergieWaermepumpe) { stiebelheatpump="CompressorB" }
+Number HeatingMode "HeatingMode [%d h]" (gEnergieWaermepumpe_OperationCounters,gEnergieWaermepumpe) { stiebelheatpump="HeatingMode" }
+Number DHWMode "DHWMode [%d h]" (gEnergieWaermepumpe_OperationCounters,gEnergieWaermepumpe) { stiebelheatpump="DHWMode" }
+Number CoolingMode "CoolingMode [%d h]" (gEnergieWaermepumpe_OperationCounters,gEnergieWaermepumpe) { stiebelheatpump="CoolingMode" }
+Text item=CompressorA
+Text item=CompressorB
+Text item=HeatingMode
+Text item=DHWMode
+Text item=CoolingMode
+
+Group gEnergieWaermepumpe_CurrentValues "CurrentValues" (gEnergieWaermepumpe) 
+Number CollectorTemperatur "CollectorTemperatur [%.1f °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="CollectorTemperatur" }
+Number OutsideTemperature "OutsideTemperature [%.1f °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="OutsideTemperature" }
+Number FlowTemperature "FlowTemperature [%.1f °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="FlowTemperature" }
+Number ReturnTemperature "ReturnTemperature [%.1f °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="ReturnTemperature" }
+Number HotGasTemperature "HotGasTemperature [%.1f °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="HotGasTemperature" }
+Number CylinderTemperature "CylinderTemperature [%.1f °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="CylinderTemperature" }
+Number EvaporatorTemperature "EvaporatorTemperature [%.1f °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="EvaporatorTemperature" }
+Number CondenserTemperature "CondenserTemperature [%.1f °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="CondenserTemperature" }
+Number ExtractFanSpeed "ExtractFanSpeed [%d °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="ExtractFanSpeed" }
+Number SupplyFanSpeed "SupplyFanSpeed [%d °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="SupplyFanSpeed" }
+Number ExhaustFanSpeed "ExhaustFanSpeed [%d °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="ExhaustFanSpeed" }
+Number FilteredOutsideTemperature "FilteredOutsideTemperature [%.1f °C]" (gEnergieWaermepumpe_CurrentValues,gEnergieWaermepumpe) { stiebelheatpump="FilteredOutsideTemperature" }
+Text item=CollectorTemperatur
+Text item=OutsideTemperature
+Text item=FlowTemperature
+Text item=ReturnTemperature
+Text item=HotGasTemperature
+Text item=CylinderTemperature
+Text item=EvaporatorTemperature
+Text item=CondenserTemperature
+Text item=ExtractFanSpeed
+Text item=SupplyFanSpeed
+Text item=ExhaustFanSpeed
+Text item=FilteredOutsideTemperature
+
+Group gEnergieWaermepumpe_SettingsNominalValues "SettingsNominalValues" (gEnergieWaermepumpe) 
+Number P01RoomTemperatureStandardMode "P01RoomTemperatureStandardMode [%.1f °C]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P01RoomTemperatureStandardMode" }
+Number P02RoomTemperatureSetbackMode "P02RoomTemperatureSetbackMode [%.1f °C]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P02RoomTemperatureSetbackMode" }
+Number P03RoomTemperatureStandby "P03RoomTemperatureStandby [%.1f °C]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P03RoomTemperatureStandby" }
+Number P04DHWTemperatureStandardMode "P04DHWTemperatureStandardMode [%.1f °C]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P04DHWTemperatureStandardMode" }
+Number P05DHWTemperaturSetbackMode "P05DHWTemperaturSetbackMode [%.1f °C]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P05DHWTemperaturSetbackMode" }
+Number P06DHWTemperatureStandby "P06DHWTemperatureStandby [%.1f °C]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P06DHWTemperatureStandby" }
+Number P07FanStageStandardMode "P07FanStageStandardMode [%d ]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P07FanStageStandardMode" }
+Number P08FanStageSetbackMode "P08FanStageSetbackMode [%d ]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P08FanStageSetbackMode" }
+Number P09FanStageStandby "P09FanStageStandby [%d ]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P09FanStageStandby" }
+Number P10HeatingCircuitTemperatureManualMode "P10HeatingCircuitTemperatureManualMode [%.1f °C]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P10HeatingCircuitTemperatureManualMode" }
+Number P11DHWTemperatureManualMode "P11DHWTemperatureManualMode [%.1f °C]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P11DHWTemperatureManualMode" }
+Number P12FanStageManualMode "P12FanStageManualMode [%d ]" (gEnergieWaermepumpe_SettingsNominalValues,gEnergieWaermepumpe) { stiebelheatpump="P12FanStageManualMode" }
+Setpoint item=P01RoomTemperatureStandardMode minValue=10 maxValue=30 step=0.1
+Setpoint item=P02RoomTemperatureSetbackMode minValue=10 maxValue=30 step=0.1
+Setpoint item=P03RoomTemperatureStandby minValue=10 maxValue=30 step=0.1
+Setpoint item=P04DHWTemperatureStandardMode minValue=10 maxValue=55 step=0.1
+Setpoint item=P05DHWTemperaturSetbackMode minValue=10 maxValue=55 step=1.0
+Setpoint item=P06DHWTemperatureStandby minValue=10 maxValue=55 step=1.0
+Setpoint item=P07FanStageStandardMode minValue=0 maxValue=3 step=1.0
+Setpoint item=P08FanStageSetbackMode minValue=0 maxValue=3 step=1.0
+Setpoint item=P09FanStageStandby minValue=0 maxValue=3 step=1.0
+Setpoint item=P10HeatingCircuitTemperatureManualMode minValue=10 maxValue=65 step=0.1
+Setpoint item=P11DHWTemperatureManualMode minValue=10 maxValue=65 step=0.1
+Setpoint item=P12FanStageManualMode minValue=0 maxValue=3 step=1.0
+
+Group gEnergieWaermepumpe_SettingsVentilation "SettingsVentilation" (gEnergieWaermepumpe) 
+Number P37FanStageSupplyAir1 "P37FanStageSupplyAir1 [%d m^3/s]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P37FanStageSupplyAir1" }
+Number P38FanStageSupplyAir2 "P38FanStageSupplyAir2 [%d m^3/s]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P38FanStageSupplyAir2" }
+Number P39FanStageSupplyAir3 "P39FanStageSupplyAir3 [%d m^3/s]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P39FanStageSupplyAir3" }
+Number P40FanStageExtractyAir1 "P40FanStageExtractyAir1 [%d m^3/s]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P40FanStageExtractyAir1" }
+Number P41FanStageExtractyAir2 "P41FanStageExtractyAir2 [%d m^3/s]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P41FanStageExtractyAir2" }
+Number P42FanStageExtractyAir3 "P42FanStageExtractyAir3 [%d m^3/s]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P42FanStageExtractyAir3" }
+Number P43VentilationTimeUnscheduledStage3 "P43VentilationTimeUnscheduledStage3 [%d min]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P43VentilationTimeUnscheduledStage3" }
+Number P44VentilationTimeUnscheduledStage2 "P44VentilationTimeUnscheduledStage2 [%d min]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P44VentilationTimeUnscheduledStage2" }
+Number P45VentilationTimeUnscheduledStage1 "P45VentilationTimeUnscheduledStage1 [%d min]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P45VentilationTimeUnscheduledStage1" }
+Number P46VentilationTimeUnscheduledStage0 "P46VentilationTimeUnscheduledStage0 [%d min]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P46VentilationTimeUnscheduledStage0" }
+Number P75OperatingModePassiveCooling "P75OperatingModePassiveCooling [%d ]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="P75OperatingModePassiveCooling" }
+Number StoveFireplaceOperation "StoveFireplaceOperation [%d ]" (gEnergieWaermepumpe_SettingsVentilation,gEnergieWaermepumpe) { stiebelheatpump="StoveFireplaceOperation" }
+Setpoint item=P37FanStageSupplyAir1 minValue=60 maxValue=280 step=1.0
+Setpoint item=P38FanStageSupplyAir2 minValue=60 maxValue=280 step=1.0
+Setpoint item=P39FanStageSupplyAir3 minValue=60 maxValue=280 step=1.0
+Setpoint item=P40FanStageExtractyAir1 minValue=60 maxValue=280 step=1.0
+Setpoint item=P41FanStageExtractyAir2 minValue=60 maxValue=280 step=1.0
+Setpoint item=P42FanStageExtractyAir3 minValue=60 maxValue=280 step=1.0
+Setpoint item=P43VentilationTimeUnscheduledStage3 minValue=0 maxValue=1000 step=1.0
+Setpoint item=P44VentilationTimeUnscheduledStage2 minValue=0 maxValue=1000 step=1.0
+Setpoint item=P45VentilationTimeUnscheduledStage1 minValue=0 maxValue=1000 step=1.0
+Setpoint item=P46VentilationTimeUnscheduledStage0 minValue=0 maxValue=1000 step=1.0
+Setpoint item=P75OperatingModePassiveCooling minValue=0 maxValue=2 step=1.0
+Setpoint item=StoveFireplaceOperation minValue=0 maxValue=4 step=1.0
+
+Group gEnergieWaermepumpe_SettingsHeating1 "SettingsHeating1" (gEnergieWaermepumpe) 
+Number P21HysteresisHeating1 "P21HysteresisHeating1 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P21HysteresisHeating1" }
+Number P22HysteresisHeating2 "P22HysteresisHeating2 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P22HysteresisHeating2" }
+Number P23HysteresisHeating3 "P23HysteresisHeating3 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P23HysteresisHeating3" }
+Number P24HysteresisHeating4 "P24HysteresisHeating4 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P24HysteresisHeating4" }
+Number P25HysteresisHeating5 "P25HysteresisHeating5 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P25HysteresisHeating5" }
+Number P26HysteresisHeating6 "P26HysteresisHeating6 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P26HysteresisHeating6" }
+Number P27HysteresisHeating7 "P27HysteresisHeating7 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P27HysteresisHeating7" }
+Number P28HysteresisHeating8 "P28HysteresisHeating8 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P28HysteresisHeating8" }
+Number P29SwitchingHysteresisAsymmetry "P29SwitchingHysteresisAsymmetry [%d ]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P29SwitchingHysteresisAsymmetry" }
+Number P30SwitchingValueIntegralPortionHeating "P30SwitchingValueIntegralPortionHeating [%d Kmin]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P30SwitchingValueIntegralPortionHeating" }
+Number P31AmountOfUnlockedElectricalBoosterStages "P31AmountOfUnlockedElectricalBoosterStages [%d ]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P31AmountOfUnlockedElectricalBoosterStages" }
+Number MaximumFlowTemperatureHeatingMode "MaximumFlowTemperatureHeatingMode [%.1f °C]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="MaximumFlowTemperatureHeatingMode" }
+Number P49ChangeoverTemperatureSummerWinter "P49ChangeoverTemperatureSummerWinter [%.1f °C]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P49ChangeoverTemperatureSummerWinter" }
+Number P50HysteresisChangeoverTemperatureSummerWinter "P50HysteresisChangeoverTemperatureSummerWinter [%.1f K]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P50HysteresisChangeoverTemperatureSummerWinter" }
+Number P77OutsideTemperatureAdjustment "P77OutsideTemperatureAdjustment [%d h]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P77OutsideTemperatureAdjustment" }
+Number P78BivalencePoint "P78BivalencePoint [%.1f °C]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P78BivalencePoint" }
+Number P79DelayedEnableReheating "P79DelayedEnableReheating [%d min]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="P79DelayedEnableReheating" }
+Number OutputElectricalHeatingStage1 "OutputElectricalHeatingStage1 [%.1f kW]" (gEnergieWaermepumpe_SettingsHeating1,gEnergieWaermepumpe) { stiebelheatpump="OutputElectricalHeatingStage1" }
+Setpoint item=P21HysteresisHeating1 minValue=0 maxValue=10 step=0.1
+Setpoint item=P22HysteresisHeating2 minValue=0 maxValue=10 step=0.1
+Setpoint item=P23HysteresisHeating3 minValue=0 maxValue=5 step=0.1
+Setpoint item=P24HysteresisHeating4 minValue=0 maxValue=5 step=0.1
+Setpoint item=P25HysteresisHeating5 minValue=0 maxValue=5 step=0.1
+Setpoint item=P26HysteresisHeating6 minValue=0 maxValue=5 step=0.1
+Setpoint item=P27HysteresisHeating7 minValue=0 maxValue=5 step=0.1
+Setpoint item=P28HysteresisHeating8 minValue=0 maxValue=5 step=0.1
+Setpoint item=P29SwitchingHysteresisAsymmetry minValue=1 maxValue=5 step=1.0
+Setpoint item=P30SwitchingValueIntegralPortionHeating minValue=1 maxValue=999 step=1.0
+Setpoint item=P31AmountOfUnlockedElectricalBoosterStages minValue=0 maxValue=3 step=1.0
+Setpoint item=MaximumFlowTemperatureHeatingMode minValue=10 maxValue=75 step=0.1
+Setpoint item=P49ChangeoverTemperatureSummerWinter minValue=10 maxValue=25 step=0.1
+Setpoint item=P50HysteresisChangeoverTemperatureSummerWinter minValue=1 maxValue=5 step=0.1
+Setpoint item=P77OutsideTemperatureAdjustment minValue=0 maxValue=24 step=1.0
+Setpoint item=P78BivalencePoint minValue=-10 maxValue=20 step=0.1
+Setpoint item=P79DelayedEnableReheating minValue=0 maxValue=60 step=1.0
+Setpoint item=OutputElectricalHeatingStage1 minValue=0 maxValue=10 step=1.0
+
+Group gEnergieWaermepumpe_SettingsHeating2 "SettingsHeating2" (gEnergieWaermepumpe) 
+Number P13IncreaseHeatingHC1 "P13IncreaseHeatingHC1 [%.1f ]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="P13IncreaseHeatingHC1" }
+Number P14LowEndPointHeatingHC1 "P14LowEndPointHeatingHC1 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="P14LowEndPointHeatingHC1" }
+Number P15RoomInfluenceHeatingHC1 "P15RoomInfluenceHeatingHC1 [%.1f ]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="P15RoomInfluenceHeatingHC1" }
+Number P16IncreaseHeatingHC2 "P16IncreaseHeatingHC2 [%.1f ]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="P16IncreaseHeatingHC2" }
+Number P17LowEndPointHeatingHC2 "P17LowEndPointHeatingHC2 [%.1f K]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="P17LowEndPointHeatingHC2" }
+Number P18RoomInfluenceHeatingHC2 "P18RoomInfluenceHeatingHC2 [%.1f ]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="P18RoomInfluenceHeatingHC2" }
+Number P19TemperatureCaptureReturnFlowHC1 "P19TemperatureCaptureReturnFlowHC1 [%d %]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="P19TemperatureCaptureReturnFlowHC1" }
+Number P20TemperatureCaptureReturnFlowHC2 "P20TemperatureCaptureReturnFlowHC2 [%d %]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="P20TemperatureCaptureReturnFlowHC2" }
+Number MaxSetHeatingCircuitTemperatureHC1 "MaxSetHeatingCircuitTemperatureHC1 [%.1f °C]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="MaxSetHeatingCircuitTemperatureHC1" }
+Number MinSetHeatingCircuitTemperatureHC1 "MinSetHeatingCircuitTemperatureHC1 [%.1f °C]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="MinSetHeatingCircuitTemperatureHC1" }
+Number MaxSetHeatingCircuitTemperatureHC2 "MaxSetHeatingCircuitTemperatureHC2 [%.1f °C]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="MaxSetHeatingCircuitTemperatureHC2" }
+Number MinSetHeatingCircuitTemperatureHC2 "MinSetHeatingCircuitTemperatureHC2 [%.1f °C]" (gEnergieWaermepumpe_SettingsHeating2,gEnergieWaermepumpe) { stiebelheatpump="MinSetHeatingCircuitTemperatureHC2" }
+Setpoint item=P13IncreaseHeatingHC1 minValue=1 maxValue=5 step=0.1
+Setpoint item=P14LowEndPointHeatingHC1 minValue=1 maxValue=20 step=0.1
+Setpoint item=P15RoomInfluenceHeatingHC1 minValue=1 maxValue=10 step=0.1
+Setpoint item=P16IncreaseHeatingHC2 minValue=0 maxValue=5 step=0.1
+Setpoint item=P17LowEndPointHeatingHC2 minValue=0 maxValue=20 step=0.1
+Setpoint item=P18RoomInfluenceHeatingHC2 minValue=0 maxValue=10 step=0.1
+Setpoint item=P19TemperatureCaptureReturnFlowHC1 minValue=1 maxValue=100 step=1.0
+Setpoint item=P20TemperatureCaptureReturnFlowHC2 minValue=1 maxValue=100 step=1.0
+Setpoint item=MaxSetHeatingCircuitTemperatureHC1 minValue=20 maxValue=65 step=0.1
+Setpoint item=MinSetHeatingCircuitTemperatureHC1 minValue=5 maxValue=40 step=0.1
+Setpoint item=MaxSetHeatingCircuitTemperatureHC2 minValue=20 maxValue=65 step=0.1
+Setpoint item=MinSetHeatingCircuitTemperatureHC2 minValue=5 maxValue=40 step=0.1
+
+Group gEnergieWaermepumpe_SettingsEvaporator1 "SettingsEvaporator1" (gEnergieWaermepumpe) 
+Number UpperLimitEvaporatorTemperatureForDefrostEnd "UpperLimitEvaporatorTemperatureForDefrostEnd [%.1f °C]" (gEnergieWaermepumpe_SettingsEvaporator1,gEnergieWaermepumpe) { stiebelheatpump="UpperLimitEvaporatorTemperatureForDefrostEnd" }
+Number MaxEvaporatorDefrostTime "MaxEvaporatorDefrostTime [%d min]" (gEnergieWaermepumpe_SettingsEvaporator1,gEnergieWaermepumpe) { stiebelheatpump="MaxEvaporatorDefrostTime" }
+Number LimitTemperatureCondenserElectricalReheating "LimitTemperatureCondenserElectricalReheating [%.1f °C]" (gEnergieWaermepumpe_SettingsEvaporator1,gEnergieWaermepumpe) { stiebelheatpump="LimitTemperatureCondenserElectricalReheating" }
+Number LimitTemperatureCondenserDefrostTermination "LimitTemperatureCondenserDefrostTermination [%.1f °C]" (gEnergieWaermepumpe_SettingsEvaporator1,gEnergieWaermepumpe) { stiebelheatpump="LimitTemperatureCondenserDefrostTermination" }
+Number P47CompressorRestartDelay "P47CompressorRestartDelay [%d min]" (gEnergieWaermepumpe_SettingsEvaporator1,gEnergieWaermepumpe) { stiebelheatpump="P47CompressorRestartDelay" }
+Number P48ExhaustFanSpeed "P48ExhaustFanSpeed [%d %]" (gEnergieWaermepumpe_SettingsEvaporator1,gEnergieWaermepumpe) { stiebelheatpump="P48ExhaustFanSpeed" }
+Setpoint item=UpperLimitEvaporatorTemperatureForDefrostEnd minValue=10 maxValue=30 step=0.1
+Setpoint item=MaxEvaporatorDefrostTime minValue=2 maxValue=20 step=1.0
+Setpoint item=LimitTemperatureCondenserElectricalReheating minValue=10 maxValue=30 step=0.1
+Setpoint item=LimitTemperatureCondenserDefrostTermination minValue=5 maxValue=10 step=0.1
+Setpoint item=P47CompressorRestartDelay minValue=0 maxValue=20 step=1.0
+Setpoint item=P48ExhaustFanSpeed minValue=10 maxValue=100 step=1.0
+
+Group gEnergieWaermepumpe_SettingsEvaporator2 "SettingsEvaporator2" (gEnergieWaermepumpe) 
+Number MaxDefrostDurationAAExchanger "MaxDefrostDurationAAExchanger [%d min]" (gEnergieWaermepumpe_SettingsEvaporator2,gEnergieWaermepumpe) { stiebelheatpump="MaxDefrostDurationAAExchanger" }
+Number DefrostStartThreshold "DefrostStartThreshold [%.1f %]" (gEnergieWaermepumpe_SettingsEvaporator2,gEnergieWaermepumpe) { stiebelheatpump="DefrostStartThreshold" }
+Number VolumeFlowFilterReplacement "VolumeFlowFilterReplacement [%d %]" (gEnergieWaermepumpe_SettingsEvaporator2,gEnergieWaermepumpe) { stiebelheatpump="VolumeFlowFilterReplacement" }
+Number P85DefrostModeAAHE "P85DefrostModeAAHE [%d ]" (gEnergieWaermepumpe_SettingsEvaporator2,gEnergieWaermepumpe) { stiebelheatpump="P85DefrostModeAAHE" }
+Setpoint item=MaxDefrostDurationAAExchanger minValue=0 maxValue=120 step=1.0
+Setpoint item=DefrostStartThreshold minValue=0 maxValue=10 step=0.1
+Setpoint item=VolumeFlowFilterReplacement minValue=50 maxValue=100 step=1.0
+Setpoint item=P85DefrostModeAAHE minValue=1 maxValue=5 step=1.0
+
+Group gEnergieWaermepumpe_SettingsDryHeatingProgram "SettingsDryHeatingProgram" (gEnergieWaermepumpe) 
+Number P70Start "P70Start [%d ]" (gEnergieWaermepumpe_SettingsDryHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="P70Start" }
+Number P71BaseTemperature "P71BaseTemperature [%.1f °C]" (gEnergieWaermepumpe_SettingsDryHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="P71BaseTemperature" }
+Number P72PeakTemperature "P72PeakTemperature [%.1f °C]" (gEnergieWaermepumpe_SettingsDryHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="P72PeakTemperature" }
+Number P73BaseTemperatureDuration "P73BaseTemperatureDuration [%d days]" (gEnergieWaermepumpe_SettingsDryHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="P73BaseTemperatureDuration" }
+Number P74Increase "P74Increase [%.1f K/days]" (gEnergieWaermepumpe_SettingsDryHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="P74Increase" }
+Setpoint item=P70Start minValue=0 maxValue=0 step=1.0
+Setpoint item=P71BaseTemperature minValue=20 maxValue=40 step=0.1
+Setpoint item=P72PeakTemperature minValue=25 maxValue=50 step=0.1
+Setpoint item=P73BaseTemperatureDuration minValue=0 maxValue=5 step=1.0
+Setpoint item=P74Increase minValue=1 maxValue=10 step=0.1
+
+Group gEnergieWaermepumpe_SettingsCirculationPump "SettingsCirculationPump" (gEnergieWaermepumpe) 
+Number P54minStartupCycles "P54minStartupCycles [%d per/day]" (gEnergieWaermepumpe_SettingsCirculationPump,gEnergieWaermepumpe) { stiebelheatpump="P54minStartupCycles" }
+Number P55maxStartupCycles "P55maxStartupCycles [%d per/day]" (gEnergieWaermepumpe_SettingsCirculationPump,gEnergieWaermepumpe) { stiebelheatpump="P55maxStartupCycles" }
+Number P56OutsideTemperatureMinHeatingCycles "P56OutsideTemperatureMinHeatingCycles [%.1f °C]" (gEnergieWaermepumpe_SettingsCirculationPump,gEnergieWaermepumpe) { stiebelheatpump="P56OutsideTemperatureMinHeatingCycles" }
+Number P57OutsideTemperatureMaxHeatingCycles "P57OutsideTemperatureMaxHeatingCycles [%.1f °C]" (gEnergieWaermepumpe_SettingsCirculationPump,gEnergieWaermepumpe) { stiebelheatpump="P57OutsideTemperatureMaxHeatingCycles" }
+Number P58SuppressTemperatureCaptureDuringPumpStart "P58SuppressTemperatureCaptureDuringPumpStart [%d sec]" (gEnergieWaermepumpe_SettingsCirculationPump,gEnergieWaermepumpe) { stiebelheatpump="P58SuppressTemperatureCaptureDuringPumpStart" }
+Setpoint item=P54minStartupCycles minValue=1 maxValue=24 step=1.0
+Setpoint item=P55maxStartupCycles minValue=1 maxValue=288 step=1.0
+Setpoint item=P56OutsideTemperatureMinHeatingCycles minValue=0 maxValue=20 step=0.1
+Setpoint item=P57OutsideTemperatureMaxHeatingCycles minValue=0 maxValue=25 step=0.1
+Setpoint item=P58SuppressTemperatureCaptureDuringPumpStart minValue=0 maxValue=120 step=1.0
+
+Group gEnergieWaermepumpe_SettingsHeatingProgram "SettingsHeatingProgram" (gEnergieWaermepumpe) 
+Number HP1StartTime "HP1StartTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1StartTime" }
+Number HP1StopTime "HP1StopTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1StopTime" }
+Number HP1Monday "HP1Monday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1Monday" }
+Number HP1Tuesday "HP1Tuesday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1Tuesday" }
+Number HP1Wednesday "HP1Wednesday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1Wednesday" }
+Number HP1Thusday "HP1Thusday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1Thusday" }
+Number HP1Friday "HP1Friday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1Friday" }
+Number HP1Saturday "HP1Saturday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1Saturday" }
+Number HP1Sunday "HP1Sunday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1Sunday" }
+Number HP1Enabled "HP1Enabled [%d On/Off]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP1Enabled" }
+Number HP2StartTime "HP2StartTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2StartTime" }
+Number HP2StopTime "HP2StopTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2StopTime" }
+Number HP2Monday "HP2Monday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2Monday" }
+Number HP2Tuesday "HP2Tuesday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2Tuesday" }
+Number HP2Wednesday "HP2Wednesday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2Wednesday" }
+Number HP2Thusday "HP2Thusday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2Thusday" }
+Number HP2Friday "HP2Friday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2Friday" }
+Number HP2Saturday "HP2Saturday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2Saturday" }
+Number HP2Sunday "HP2Sunday [%d weekday]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2Sunday" }
+Number HP2Enabled "HP2Enabled [%d On/Off]" (gEnergieWaermepumpe_SettingsHeatingProgram,gEnergieWaermepumpe) { stiebelheatpump="HP2Enabled" }
+Setpoint item=HP1StartTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=HP1StopTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=HP1Monday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP1Tuesday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP1Wednesday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP1Thusday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP1Friday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP1Saturday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP1Sunday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP1Enabled minValue=0 maxValue=1 step=1.0
+Setpoint item=HP2StartTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=HP2StopTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=HP2Monday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP2Tuesday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP2Wednesday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP2Thusday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP2Friday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP2Saturday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP2Sunday minValue=0 maxValue=1 step=1.0
+Setpoint item=HP2Enabled minValue=0 maxValue=1 step=1.0
+
+Group gEnergieWaermepumpe_SettingsDomesticHotWaterProgram "SettingsDomesticHotWaterProgram" (gEnergieWaermepumpe) 
+Number BP1StartTime "BP1StartTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1StartTime" }
+Number BP1StopTime "BP1StopTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1StopTime" }
+Number BP1Monday "BP1Monday [%d weekday]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1Monday" }
+Number BP1Tuesday "BP1Tuesday [%d weekday]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1Tuesday" }
+Number BP1Wednesday "BP1Wednesday [%d weekday]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1Wednesday" }
+Number BP1Thusday "BP1Thusday [%d weekday]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1Thusday" }
+Number BP1Friday "BP1Friday [%d weekday]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1Friday" }
+Number BP1Saturday "BP1Saturday [%d weekday]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1Saturday" }
+Number BP1Sunday "BP1Sunday [%d weekday]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1Sunday" }
+Number BP1Enabled "BP1Enabled [%d On/Off]" (gEnergieWaermepumpe_SettingsDomesticHotWaterProgram,gEnergieWaermepumpe) { stiebelheatpump="BP1Enabled" }
+Setpoint item=BP1StartTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=BP1StopTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=BP1Monday minValue=0 maxValue=1 step=1.0
+Setpoint item=BP1Tuesday minValue=0 maxValue=1 step=1.0
+Setpoint item=BP1Wednesday minValue=0 maxValue=1 step=1.0
+Setpoint item=BP1Thusday minValue=0 maxValue=1 step=1.0
+Setpoint item=BP1Friday minValue=0 maxValue=1 step=1.0
+Setpoint item=BP1Saturday minValue=0 maxValue=1 step=1.0
+Setpoint item=BP1Sunday minValue=0 maxValue=1 step=1.0
+Setpoint item=BP1Enabled minValue=0 maxValue=1 step=1.0
+
+Group gEnergieWaermepumpe_SettingsVentilationProgram "SettingsVentilationProgram" (gEnergieWaermepumpe) 
+Number LP1StartTime "LP1StartTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1StartTime" }
+Number LP1StopTime "LP1StopTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1StopTime" }
+Number LP1Monday "LP1Monday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1Monday" }
+Number LP1Tuesday "LP1Tuesday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1Tuesday" }
+Number LP1Wednesday "LP1Wednesday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1Wednesday" }
+Number LP1Thusday "LP1Thusday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1Thusday" }
+Number LP1Friday "LP1Friday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1Friday" }
+Number LP1Saturday "LP1Saturday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1Saturday" }
+Number LP1Sunday "LP1Sunday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1Sunday" }
+Number LP1Enabled "LP1Enabled [%d On/Off]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP1Enabled" }
+Number LP2StartTime "LP2StartTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2StartTime" }
+Number LP2StopTime "LP2StopTime [%d hh:mm]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2StopTime" }
+Number LP2Monday "LP2Monday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2Monday" }
+Number LP2Tuesday "LP2Tuesday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2Tuesday" }
+Number LP2Wednesday "LP2Wednesday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2Wednesday" }
+Number LP2Thusday "LP2Thusday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2Thusday" }
+Number LP2Friday "LP2Friday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2Friday" }
+Number LP2Saturday "LP2Saturday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2Saturday" }
+Number LP2Sunday "LP2Sunday [%d weekday]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2Sunday" }
+Number LP2Enabled "LP2Enabled [%d On/Off]" (gEnergieWaermepumpe_SettingsVentilationProgram,gEnergieWaermepumpe) { stiebelheatpump="LP2Enabled" }
+Setpoint item=LP1StartTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=LP1StopTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=LP1Monday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP1Tuesday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP1Wednesday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP1Thusday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP1Friday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP1Saturday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP1Sunday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP1Enabled minValue=0 maxValue=1 step=1.0
+Setpoint item=LP2StartTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=LP2StopTime minValue=0 maxValue=2359 step=1.0
+Setpoint item=LP2Monday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP2Tuesday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP2Wednesday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP2Thusday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP2Friday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP2Saturday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP2Sunday minValue=0 maxValue=1 step=1.0
+Setpoint item=LP2Enabled minValue=0 maxValue=1 step=1.0
+
+Group gEnergieWaermepumpe_SettingsAbsenceProgram "SettingsAbsenceProgram" (gEnergieWaermepumpe) 
+Number AP0DurationUntilAbsenceStart "AP0DurationUntilAbsenceStart [%.1f h]" (gEnergieWaermepumpe_SettingsAbsenceProgram,gEnergieWaermepumpe) { stiebelheatpump="AP0DurationUntilAbsenceStart" }
+Number AP0AbsenceDuration "AP0AbsenceDuration [%.1f h]" (gEnergieWaermepumpe_SettingsAbsenceProgram,gEnergieWaermepumpe) { stiebelheatpump="AP0AbsenceDuration" }
+Number AP0EnableAbsenceProgram "AP0EnableAbsenceProgram [%d ]" (gEnergieWaermepumpe_SettingsAbsenceProgram,gEnergieWaermepumpe) { stiebelheatpump="AP0EnableAbsenceProgram" }
+Setpoint item=AP0DurationUntilAbsenceStart minValue=0 maxValue=2388 step=0.1
+Setpoint item=AP0AbsenceDuration minValue=0 maxValue=2388 step=0.1
+Setpoint item=AP0EnableAbsenceProgram minValue=0 maxValue=1 step=1.0
+
+Group gEnergieWaermepumpe_SettingsRestartAndMixerTime "SettingsRestartAndMixerTime" (gEnergieWaermepumpe) 
+Number P59RestartBeforSetbackEnd "P59RestartBeforSetbackEnd [%d min]" (gEnergieWaermepumpe_SettingsRestartAndMixerTime,gEnergieWaermepumpe) { stiebelheatpump="P59RestartBeforSetbackEnd" }
+Number MixerProportionalRange "MixerProportionalRange [%.1f %]" (gEnergieWaermepumpe_SettingsRestartAndMixerTime,gEnergieWaermepumpe) { stiebelheatpump="MixerProportionalRange" }
+Number DerivativeMixerTime "DerivativeMixerTime [%.1f sec]" (gEnergieWaermepumpe_SettingsRestartAndMixerTime,gEnergieWaermepumpe) { stiebelheatpump="DerivativeMixerTime" }
+Number MixerTimeInterval "MixerTimeInterval [%d K/day]" (gEnergieWaermepumpe_SettingsRestartAndMixerTime,gEnergieWaermepumpe) { stiebelheatpump="MixerTimeInterval" }
+Setpoint item=P59RestartBeforSetbackEnd minValue=0 maxValue=300 step=1.0
+Setpoint item=MixerProportionalRange minValue=1 maxValue=100 step=0.1
+Setpoint item=DerivativeMixerTime minValue=1 maxValue=100 step=0.1
+Setpoint item=MixerTimeInterval minValue=1 maxValue=10 step=0.1
+
+Group gEnergieWaermepumpe_SettingsDomesticHotWater "SettingsDomesticHotWater" (gEnergieWaermepumpe) 
+Number P32StartupHysteresisDHWTemperature "P32StartupHysteresisDHWTemperature [%.1f K]" (gEnergieWaermepumpe_SettingsDomesticHotWater,gEnergieWaermepumpe) { stiebelheatpump="P32StartupHysteresisDHWTemperature" }
+Number P33TimeDelayElectricalReheating "P33TimeDelayElectricalReheating [%d min]" (gEnergieWaermepumpe_SettingsDomesticHotWater,gEnergieWaermepumpe) { stiebelheatpump="P33TimeDelayElectricalReheating" }
+Number P34OutsideTemperatureLimitForImmElectricalReheating "P34OutsideTemperatureLimitForImmElectricalReheating [%.1f °C]" (gEnergieWaermepumpe_SettingsDomesticHotWater,gEnergieWaermepumpe) { stiebelheatpump="P34OutsideTemperatureLimitForImmElectricalReheating" }
+Number P35PasteurisationInterval "P35PasteurisationInterval [%d K/day]" (gEnergieWaermepumpe_SettingsDomesticHotWater,gEnergieWaermepumpe) { stiebelheatpump="P35PasteurisationInterval" }
+Number P36MaxDurationDHWLoading "P36MaxDurationDHWLoading [%d h]" (gEnergieWaermepumpe_SettingsDomesticHotWater,gEnergieWaermepumpe) { stiebelheatpump="P36MaxDurationDHWLoading" }
+Number PasteurisationHeatupTemperature "PasteurisationHeatupTemperature [%.1f °C]" (gEnergieWaermepumpe_SettingsDomesticHotWater,gEnergieWaermepumpe) { stiebelheatpump="PasteurisationHeatupTemperature" }
+Number NoOfEnabledElectricalReheatStagesDHWLoading "NoOfEnabledElectricalReheatStagesDHWLoading [%d ]" (gEnergieWaermepumpe_SettingsDomesticHotWater,gEnergieWaermepumpe) { stiebelheatpump="NoOfEnabledElectricalReheatStagesDHWLoading" }
+Number MaxFlowTemperatureDHWMode "MaxFlowTemperatureDHWMode [%.1f °C]" (gEnergieWaermepumpe_SettingsDomesticHotWater,gEnergieWaermepumpe) { stiebelheatpump="MaxFlowTemperatureDHWMode" }
+Number CompressorShutdownDHWLoading "CompressorShutdownDHWLoading [%d ]" (gEnergieWaermepumpe_SettingsDomesticHotWater,gEnergieWaermepumpe) { stiebelheatpump="CompressorShutdownDHWLoading" }
+Setpoint item=P32StartupHysteresisDHWTemperature minValue=2 maxValue=10 step=0.1
+Setpoint item=P33TimeDelayElectricalReheating minValue=0 maxValue=240 step=1.0
+Setpoint item=P34OutsideTemperatureLimitForImmElectricalReheating minValue=-10 maxValue=10 step=1.0
+Setpoint item=P35PasteurisationInterval minValue=1 maxValue=30 step=1.0
+Setpoint item=P36MaxDurationDHWLoading minValue=6 maxValue=12 step=1.0
+Setpoint item=PasteurisationHeatupTemperature minValue=10 maxValue=65 step=0.1
+Setpoint item=NoOfEnabledElectricalReheatStagesDHWLoading minValue=0 maxValue=3 step=1.0
+Setpoint item=MaxFlowTemperatureDHWMode minValue=10 maxValue=75 step=0.1
+Setpoint item=CompressorShutdownDHWLoading minValue=0 maxValue=1 step=1.0
+
+WeekDay,Hours,Minutes,Seconds,Year,Month,Day,P01RoomTemperatureStandardMode,P02RoomTemperatureSetbackMode,P03RoomTemperatureStandby,P04DHWTemperatureStandardMode,P05DHWTemperaturSetbackMode,P06DHWTemperatureStandby,P07FanStageStandardMode,P08FanStageSetbackMode,P09FanStageStandby,P10HeatingCircuitTemperatureManualMode,P11DHWTemperatureManualMode,P12FanStageManualMode,P37FanStageSupplyAir1,P38FanStageSupplyAir2,P39FanStageSupplyAir3,P40FanStageExtractyAir1,P41FanStageExtractyAir2,P42FanStageExtractyAir3,P43VentilationTimeUnscheduledStage3,P44VentilationTimeUnscheduledStage2,P45VentilationTimeUnscheduledStage1,P46VentilationTimeUnscheduledStage0,P75OperatingModePassiveCooling,StoveFireplaceOperation,P21HysteresisHeating1,P22HysteresisHeating2,P23HysteresisHeating3,P24HysteresisHeating4,P25HysteresisHeating5,P26HysteresisHeating6,P27HysteresisHeating7,P28HysteresisHeating8,P29SwitchingHysteresisAsymmetry,P30SwitchingValueIntegralPortionHeating,P31AmountOfUnlockedElectricalBoosterStages,MaximumFlowTemperatureHeatingMode,P49ChangeoverTemperatureSummerWinter,P50HysteresisChangeoverTemperatureSummerWinter,P77OutsideTemperatureAdjustment,P78BivalencePoint,P79DelayedEnableReheating,OutputElectricalHeatingStage1,P13IncreaseHeatingHC1,P14LowEndPointHeatingHC1,P15RoomInfluenceHeatingHC1,P16IncreaseHeatingHC2,P17LowEndPointHeatingHC2,P18RoomInfluenceHeatingHC2,P19TemperatureCaptureReturnFlowHC1,P20TemperatureCaptureReturnFlowHC2,MaxSetHeatingCircuitTemperatureHC1,MinSetHeatingCircuitTemperatureHC1,MaxSetHeatingCircuitTemperatureHC2,MinSetHeatingCircuitTemperatureHC2,UpperLimitEvaporatorTemperatureForDefrostEnd,MaxEvaporatorDefrostTime,LimitTemperatureCondenserElectricalReheating,LimitTemperatureCondenserDefrostTermination,P47CompressorRestartDelay,P48ExhaustFanSpeed,MaxDefrostDurationAAExchanger,DefrostStartThreshold,VolumeFlowFilterReplacement,P85DefrostModeAAHE,P70Start,P71BaseTemperature,P72PeakTemperature,P73BaseTemperatureDuration,P74Increase,P54minStartupCycles,P55maxStartupCycles,P56OutsideTemperatureMinHeatingCycles,P57OutsideTemperatureMaxHeatingCycles,P58SuppressTemperatureCaptureDuringPumpStart,HP1StartTime,HP1StopTime,HP1Monday,HP1Tuesday,HP1Wednesday,HP1Thusday,HP1Friday,HP1Saturday,HP1Sunday,HP1Enabled,HP2StartTime,HP2StopTime,HP2Monday,HP2Tuesday,HP2Wednesday,HP2Thusday,HP2Friday,HP2Saturday,HP2Sunday,HP2Enabled,BP1StartTime,BP1StopTime,BP1Monday,BP1Tuesday,BP1Wednesday,BP1Thusday,BP1Friday,BP1Saturday,BP1Sunday,BP1Enabled,LP1StartTime,LP1StopTime,LP1Monday,LP1Tuesday,LP1Wednesday,LP1Thusday,LP1Friday,LP1Saturday,LP1Sunday,LP1Enabled,LP2StartTime,LP2StopTime,LP2Monday,LP2Tuesday,LP2Wednesday,LP2Thusday,LP2Friday,LP2Saturday,LP2Sunday,LP2Enabled,AP0DurationUntilAbsenceStart,AP0AbsenceDuration,AP0EnableAbsenceProgram,P59RestartBeforSetbackEnd,MixerProportionalRange,DerivativeMixerTime,MixerTimeInterval,P32StartupHysteresisDHWTemperature,P33TimeDelayElectricalReheating,P34OutsideTemperatureLimitForImmElectricalReheating,P35PasteurisationInterval,P36MaxDurationDHWLoading,PasteurisationHeatupTemperature,NoOfEnabledElectricalReheatStagesDHWLoading,MaxFlowTemperatureDHWMode,CompressorShutdownDHWLoading,
