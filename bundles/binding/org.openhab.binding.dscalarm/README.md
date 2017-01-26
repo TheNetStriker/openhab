@@ -13,6 +13,10 @@ There are some configuration settings that you can set in the openhab.cfg file. 
 ```
 ############################## DSC Alarm Binding #####################################
 #
+# DSC Alarm interface device type
+# Valid values are it100 (default for serial connection) or envisalink (default for tcp connection)
+#dscalarm:deviceType=
+
 # DSC Alarm port name for a serial connection.
 # Valid values are e.g. COM1 for Windows and /dev/ttyS0 or /dev/ttyUSB0 for Linux.
 # Leave undefined if not connecting by serial port.
@@ -23,9 +27,14 @@ There are some configuration settings that you can set in the openhab.cfg file. 
 # Leave undefined if using default.
 #dscalarm:baud=
 
-# DSC Alarm IP address for a TCP connection. 
+# DSC Alarm IP address for a TCP connection.
 # Leave undefined if not connecting by network connection.
 #dscalarm:ip=
+
+# DSC Alarm TCP port for a TCP connection.
+# Can be EyezOn Envisalink on 4025 (default) or a TCP serial server to IT-100
+# Leave undefined if not connecting by network connection.
+#dscalarm:tcpPort=
 
 # DSC Alarm password for logging into the EyezOn Envisalink 3/2DS interface.
 # Leave undefined if using default.
@@ -146,7 +155,9 @@ The DSCAlarmItemType maps the binding to an openHAB item type.  Here are the sup
 <br/>
 0=OFF<br/>
 1=ON<br/>
-2=Flashing<br/></td></tr>    
+2=Flashing<br/></td></tr>
+    <tr><td>keypad_lcd_update</td><td>String</td><td>LCD Update string for the IT100</td></tr>
+    <tr><td>keypad_lcd_cursor</td><td>String</td><td>LCD Cursor change string for the IT100</td></tr>
 </table>
 
 The following is an example of an item file:
