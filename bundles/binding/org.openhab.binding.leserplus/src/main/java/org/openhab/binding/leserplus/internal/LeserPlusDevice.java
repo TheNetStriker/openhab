@@ -28,6 +28,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.openhab.core.events.EventPublisher;
 import org.openhab.core.library.types.StringType;
 import org.openhab.core.transform.TransformationException;
+import org.openhab.core.transform.TransformationHelper;
 import org.openhab.core.transform.TransformationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,6 +83,9 @@ public class LeserPlusDevice implements SerialPortEventListener {
 			logger.error("Invalid reader type: " + readerType);
 			return;
 		}
+		
+		this.transformationService = TransformationHelper
+                .getTransformationService(LeserPlusActivator.getContext(), "MAP");
 	}
 
 	public void setEventPublisher(EventPublisher eventPublisher) {
@@ -90,10 +94,6 @@ public class LeserPlusDevice implements SerialPortEventListener {
 
 	public void unsetEventPublisher(EventPublisher eventPublisher) {
 		this.eventPublisher = null;
-	}
-	
-	public void setTransformationService(TransformationService transformationService) {
-		this.transformationService = transformationService;
 	}
 
 	public String getPort() {

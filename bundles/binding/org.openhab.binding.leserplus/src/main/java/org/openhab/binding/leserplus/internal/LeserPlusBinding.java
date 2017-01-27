@@ -58,8 +58,6 @@ public class LeserPlusBinding extends AbstractEventSubscriber implements Binding
 	private Map<String, LeserPlusCommand> itemCommandMap = new HashMap<String, LeserPlusCommand>();
 	
 	private EventPublisher eventPublisher = null;
-
-	private TransformationService transformationService;
 	
 	public void setEventPublisher(EventPublisher eventPublisher) {
 		this.eventPublisher = eventPublisher;
@@ -74,20 +72,6 @@ public class LeserPlusBinding extends AbstractEventSubscriber implements Binding
 
 		for(LeserPlusDevice leserPlusDevice : leserPlusDevices.values()) {
 			leserPlusDevice.setEventPublisher(null);
-		}
-	}
-	
-	public void setTransformationService(TransformationService transformationService) {
-		this.transformationService = transformationService;
-		for(LeserPlusDevice leserPlusDevice : leserPlusDevices.values()) {
-			leserPlusDevice.setTransformationService(transformationService);
-		}
-	}
-
-	public void unsetTransformationService(TransformationService transformationService) {
-		this.transformationService = null;
-		for(LeserPlusDevice leserPlusDevice : leserPlusDevices.values()) {
-			leserPlusDevice.setTransformationService(null);
 		}
 	}
 
@@ -182,9 +166,8 @@ public class LeserPlusBinding extends AbstractEventSubscriber implements Binding
 			}
 			
 			leserPlusDevice = new LeserPlusDevice(port, readerType, readerId);
-
-			leserPlusDevice.setTransformationService(transformationService);
 			leserPlusDevice.setEventPublisher(eventPublisher);
+			
 			try {
 				leserPlusDevice.initialize();
 			} catch (InitializationException e) {
@@ -196,6 +179,7 @@ public class LeserPlusBinding extends AbstractEventSubscriber implements Binding
 						"Could not open serial port " + port + ": "
 								+ e.getMessage());
 			}
+			
 			itemMap.put(item.getName(), port);
 			leserPlusDevices.put(port, leserPlusDevice);
 		} else {
